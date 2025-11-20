@@ -1,0 +1,36 @@
+{
+  "HomePage": {
+    "title": "FINANCIA LO <span>EXTRAORDINARIO</span>",
+    "subtitle": "Descubre y apoya a la próxima generación del cine. Del guion a la pantalla grande.",
+    "trending": "Proyectos en Tendencia",
+    "seeAll": "Ver Todos los Proyectos"
+  },
+  "Navigation": {
+    "discover": "Descubrir",
+    "dashboard": "Panel",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión"
+  },
+  "Footer": {
+    "rights": "© 2024 The Collective. Todos los derechos reservados."
+  },
+  "Auth": {
+    "welcome": "Bienvenido de nuevo",
+    "signInSubtitle": "Inicia sesión en tu cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "signingIn": "Iniciando sesión...",
+    "orContinue": "O continúa con",
+    "signInGoogle": "Iniciar sesión con Google",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "forgotPasswordSubtitle": "Ingresa tu correo para restablecer tu contraseña",
+    "sendResetLink": "Enviar enlace",
+    "sending": "Enviando...",
+    "resetEmailSent": "Revisa tu correo para el enlace de restablecimiento.",
+    "backToSignIn": "Volver a Iniciar Sesión",
+    "forgotPasswordLink": "¿Olvidaste tu contraseña?"
+  }
+}

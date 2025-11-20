@@ -1,0 +1,36 @@
+{
+  "HomePage": {
+    "title": "FUND THE <span>EXTRAORDINARY</span>",
+    "subtitle": "Discover and support the next generation of cinema. From screenplay to the silver screen.",
+    "trending": "Trending Projects",
+    "seeAll": "See All Projects"
+  },
+  "Navigation": {
+    "discover": "Discover",
+    "dashboard": "Dashboard",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "Footer": {
+    "rights": "© 2024 The Collective. All rights reserved."
+  },
+  "Auth": {
+    "welcome": "Welcome Back",
+    "signInSubtitle": "Sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "orContinue": "Or continue with",
+    "signInGoogle": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "forgotPassword": "Forgot Password",
+    "forgotPasswordSubtitle": "Enter your email to reset your password",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending...",
+    "resetEmailSent": "Check your email for a reset link.",
+    "backToSignIn": "Back to Sign In",
+    "forgotPasswordLink": "Forgot password?"
+  }
+}
