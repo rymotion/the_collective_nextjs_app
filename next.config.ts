@@ -8,6 +8,9 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  webpack: (config) => {
+    return config;
+  },
 };
  
 export default withNextIntl(nextConfig);
