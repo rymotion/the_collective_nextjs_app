@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import MarqueeCarousel from "@/components/MarqueeCarousel";
+import ProjectCarousel from "@/components/ProjectCarousel";
 import { getProjects } from "@/data/mockData";
 
 export default async function Home() {
@@ -22,7 +23,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Carousel Section - Full Width */}
+      {/* Featured Carousel Section - Full Width */}
       <section className="w-full mb-16">
         <div className="container">
           <div className="flex items-center justify-between mb-8">
@@ -33,6 +34,11 @@ export default async function Home() {
           </div>
         </div>
         <MarqueeCarousel projects={projects} />
+      </section>
+
+      {/* Browse All Projects - Horizontal Carousel */}
+      <section className="w-full mb-16">
+        <ProjectCarousel projects={projects} title="All Projects" />
       </section>
     </>
   );

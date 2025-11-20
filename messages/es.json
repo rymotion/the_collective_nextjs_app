@@ -7,6 +7,8 @@
   },
   "Navigation": {
     "discover": "Descubrir",
+    "search": "Buscar",
+    "genre": "Género",
     "dashboard": "Panel",
     "signIn": "Iniciar Sesión",
     "signOut": "Cerrar Sesión"

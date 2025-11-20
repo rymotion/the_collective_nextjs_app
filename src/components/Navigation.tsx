@@ -43,13 +43,25 @@ export default function Navigation() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-primary' : 'hover:text-primary'}`}
           >
             {t('discover')}
           </Link>
-          
+          <Link
+            href="/search"
+            className={`text-sm font-medium transition-colors ${isActive('/search') ? 'text-primary' : 'hover:text-primary'}`}
+          >
+            {t('search')}
+          </Link>
+          <Link
+            href="/genre"
+            className={`text-sm font-medium transition-colors ${isActive('/genre') ? 'text-primary' : 'hover:text-primary'}`}
+          >
+            {t('genre')}
+          </Link>
+
           {!loading && (
             <>
               {isAuthenticated ? (
