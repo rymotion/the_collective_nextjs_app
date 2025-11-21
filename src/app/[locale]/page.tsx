@@ -4,12 +4,13 @@ import ProjectCarousel from "@/components/ProjectCarousel";
 import EmptyProjectsState from "@/components/EmptyProjectsState";
 import { getProjects } from "@/data/mockData";
 
-export default async function Home({ params }: { params: { locale: string } }) {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const { data: projects } = await getProjects();
   const t = await getTranslations('HomePage');
 
   if (!projects || projects.length === 0) {
-    return <EmptyProjectsState locale={params.locale} />;
+    return <EmptyProjectsState locale={locale} />;
   }
 
   return (
