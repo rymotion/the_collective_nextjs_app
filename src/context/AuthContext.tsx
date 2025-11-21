@@ -1,12 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
+import {
   User,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   sendPasswordResetEmail
@@ -22,7 +20,6 @@ interface AuthContextType {
   isImdbSynced: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, displayName?: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   updateImdbUrl: (url: string) => Promise<void>;
   removeImdbUrl: () => Promise<void>;
@@ -121,38 +118,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      
-      // Check if profile exists, create if not
-      const profile = await getUserProfile(userCredential.user.uid);
-      if (!profile) {
-        await setUserProfile(userCredential.user.uid, {
-          uid: userCredential.user.uid,
-          email: userCredential.user.email || '',
-          displayName: userCredential.user.displayName || undefined,
-          imdbSynced: false,
-        });
-      }
-    } catch (error: any) {
-      console.error('Google sign in error:', error);
-      
-      // Provide user-friendly error messages
-      if (error.code === 'auth/network-request-failed') {
-        throw new Error('Network error. Please check your internet connection and try again.');
-      } else if (error.code === 'auth/popup-closed-by-user') {
-        throw new Error('Sign-in cancelled.');
-      } else if (error.code === 'auth/popup-blocked') {
-        throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
-      } else if (error.code === 'auth/cancelled-popup-request') {
-        throw new Error('Sign-in cancelled.');
-      }
-      
-      throw new Error(error.message || 'Failed to sign in with Google');
-    }
-  };
 
   const signOut = async () => {
     try {
@@ -233,7 +198,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isImdbSynced: userProfile?.imdbSynced || false,
     signIn,
     signUp,
-    signInWithGoogle,
     signOut,
     updateImdbUrl,
     removeImdbUrl,
