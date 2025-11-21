@@ -143,7 +143,7 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
                     Contribution Amount (USD)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-muted">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-muted pointer-events-none" aria-hidden="true">
                       $
                     </span>
                     <input
@@ -156,6 +156,7 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
                       step="0.01"
                       className="w-full pl-12 pr-4 py-4 bg-surface border-2 border-white/10 rounded-lg text-2xl font-bold text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all"
                       required
+                      aria-label="Contribution amount in USD"
                     />
                   </div>
                   <p className="text-xs text-muted mt-2">

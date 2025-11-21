@@ -50,10 +50,10 @@ export default function SearchPage() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              scale={0.25}
+              strokeWidth={2}
               stroke="currentColor"
-              className="w-6 h-6 text-muted shrink-0"
+              className="w-5 h-5 text-muted shrink-0"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -67,6 +67,7 @@ export default function SearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 bg-transparent text-foreground text-lg placeholder:text-muted focus:outline-none"
+              aria-label="Search projects"
             />
           </div>
         </div>
