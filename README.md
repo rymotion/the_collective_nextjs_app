@@ -50,6 +50,9 @@ Complete documentation is available in the `/documentation` folder:
 ## ✨ Features
 
 - 🎬 **Project Discovery** - Browse and search independent film projects
+- ✍️ **Create Pitch Workflow** - Multi-step form to pitch your screenplay
+- 📝 **Draft & Publish** - Save drafts and publish when ready
+- 👥 **Crew Invitations** - Invite team members directly via email
 - 👤 **User Authentication** - Secure email/password authentication via Supabase
 - 💰 **Crowdfunding** - Support filmmakers with contributions
 - ⭐ **Favorites** - Save and track your favorite projects
@@ -117,17 +120,18 @@ npm run lint     # Run ESLint
 
 ## 🗄️ Database Schema
 
-The application uses 7 main tables:
+The application uses 8 main tables:
 
 1. **profiles** - User profiles with IMDb integration
-2. **projects** - Film projects seeking funding
+2. **projects** - Film projects seeking funding (with draft/publish support)
 3. **cast_crew** - Cast and crew members for projects
 4. **accolades** - Awards and recognition
 5. **contributions** - User funding contributions
 6. **project_updates** - Project status updates
 7. **favorites** - User-saved favorite projects
+8. **crew_invitations** - Crew member invitations for projects
 
-See [DATABASE_SETUP.md](./documentation/DATABASE_SETUP.md) for complete schema details.
+See [DATABASE_SETUP.md](./documentation/DATABASE_SETUP.md) and [CREATE_PITCH_WORKFLOW.md](./documentation/CREATE_PITCH_WORKFLOW.md) for complete schema details.
 
 ## 🔐 Security
 

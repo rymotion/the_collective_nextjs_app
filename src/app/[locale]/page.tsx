@@ -1,11 +1,16 @@
 import { getTranslations } from 'next-intl/server';
 import MarqueeCarousel from "@/components/MarqueeCarousel";
 import ProjectCarousel from "@/components/ProjectCarousel";
+import EmptyProjectsState from "@/components/EmptyProjectsState";
 import { getProjects } from "@/data/mockData";
 
-export default async function Home() {
+export default async function Home({ params }: { params: { locale: string } }) {
   const { data: projects } = await getProjects();
   const t = await getTranslations('HomePage');
+
+  if (!projects || projects.length === 0) {
+    return <EmptyProjectsState locale={params.locale} />;
+  }
 
   return (
     <div className="w-full">

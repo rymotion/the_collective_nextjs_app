@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPBASE_API_URL!;
-const supabaseAnonKey = process.env.SUPABASE_PRIVATE_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -52,9 +52,13 @@ export type Database = {
           image_url: string | null;
           goal: number;
           raised: number;
-          status: 'active' | 'funded' | 'completed' | 'cancelled';
+          status: 'draft' | 'active' | 'funded' | 'completed' | 'cancelled';
+          is_published: boolean;
+          country_of_origin: string | null;
+          funding_duration_days: number | null;
           created_at: string;
           updated_at: string;
+          modified_at: string;
           deadline: string | null;
         };
         Insert: {
@@ -64,6 +68,9 @@ export type Database = {
           genre: string;
           image_url?: string | null;
           goal: number;
+          is_published?: boolean;
+          country_of_origin?: string | null;
+          funding_duration_days?: number | null;
           deadline?: string | null;
         };
         Update: {
@@ -72,7 +79,10 @@ export type Database = {
           genre?: string;
           image_url?: string | null;
           goal?: number;
-          status?: 'active' | 'funded' | 'completed' | 'cancelled';
+          status?: 'draft' | 'active' | 'funded' | 'completed' | 'cancelled';
+          is_published?: boolean;
+          country_of_origin?: string | null;
+          funding_duration_days?: number | null;
           deadline?: string | null;
         };
       };
@@ -161,6 +171,28 @@ export type Database = {
         Insert: {
           user_id: string;
           project_id: string;
+        };
+      };
+      crew_invitations: {
+        Row: {
+          id: string;
+          project_id: string;
+          full_name: string;
+          email: string;
+          invited_by: string;
+          status: 'pending' | 'accepted' | 'declined';
+          created_at: string;
+          modified_at: string;
+        };
+        Insert: {
+          project_id: string;
+          full_name: string;
+          email: string;
+          invited_by: string;
+          status?: 'pending' | 'accepted' | 'declined';
+        };
+        Update: {
+          status?: 'pending' | 'accepted' | 'declined';
         };
       };
     };
