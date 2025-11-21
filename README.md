@@ -112,10 +112,13 @@ the-collective/
 ## 🔧 Available Scripts
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run start    # Start production server
-npm run lint     # Run ESLint
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run start      # Start production server
+npm run lint       # Run ESLint
+npm test           # Run tests with coverage
+npm run test:watch # Run tests in watch mode
+npm run test:ci    # Run tests in CI mode
 ```
 
 ## 🗄️ Database Schema
