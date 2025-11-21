@@ -1,10 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import Link from "next/link";
 
 export default function BidButton() {
-  const { isAuthenticated, isImdbSynced } = useAuth();
+  const { isAuthenticated, profile } = useSupabaseAuth();
+  const isImdbSynced = profile?.imdb_synced || false;
 
   if (!isAuthenticated) {
     return (

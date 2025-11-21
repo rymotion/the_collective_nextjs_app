@@ -1,12 +1,12 @@
 "use client";
 
 import { Link, useRouter, usePathname } from "@/i18n/routing";
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useTranslations } from "next-intl";
 import { useState, useRef, useEffect } from "react";
 
 export default function Navigation() {
-  const { isAuthenticated, user, signOut, loading, userProfile } = useAuth();
+  const { isAuthenticated, user, signOut, loading, profile } = useSupabaseAuth();
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations('Navigation');
@@ -124,8 +124,8 @@ export default function Navigation() {
                     <div className={`rounded-full bg-surface border border-white/10 flex items-center justify-center overflow-hidden transition-all duration-300 ${
                       shouldExpand ? 'w-12 h-12' : 'w-8 h-8'
                     }`}>
-                      {user?.photoURL ? (
-                        <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                      {profile?.avatar_url ? (
+                        <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`text-muted transition-all duration-300 ${
                           shouldExpand ? 'w-7 h-7' : 'w-5 h-5'
@@ -139,7 +139,7 @@ export default function Navigation() {
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-surface border border-white/10 rounded-lg shadow-xl py-1 animate-fade-in">
                       <div className="px-4 py-2 border-b border-white/5">
-                        <p className="text-sm font-medium truncate">{userProfile?.displayName || user?.email}</p>
+                        <p className="text-sm font-medium truncate">{profile?.display_name || user?.email}</p>
                       </div>
                       <Link 
                         href="/dashboard" 

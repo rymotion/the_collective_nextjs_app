@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const { isAuthenticated, user, userProfile, loading, updateImdbUrl, removeImdbUrl } = useAuth();
+  const { isAuthenticated, user, profile, loading, updateProfile } = useSupabaseAuth();
   const [imdbUrl, setImdbUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   const handleSaveImdb = async () => {
     setError("");
-    
+
     if (!imdbUrl.trim()) {
       setError("Please enter a valid IMDb URL");
       return;
@@ -40,7 +40,10 @@ export default function Dashboard() {
 
     setIsSaving(true);
     try {
-      await updateImdbUrl(imdbUrl);
+      await updateProfile({
+        imdb_profile_url: imdbUrl,
+        imdb_synced: true,
+      });
       setImdbUrl("");
     } catch (err: any) {
       setError(err.message || "Failed to save IMDb profile");
@@ -52,7 +55,10 @@ export default function Dashboard() {
   const handleRemoveImdb = async () => {
     setIsSaving(true);
     try {
-      await removeImdbUrl();
+      await updateProfile({
+        imdb_profile_url: null,
+        imdb_synced: false,
+      });
     } catch (err: any) {
       setError(err.message || "Failed to remove IMDb profile");
     } finally {
@@ -66,11 +72,11 @@ export default function Dashboard() {
         <h1 className="text-display">Dashboard</h1>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <div className="font-bold text-lg">{userProfile?.displayName || user?.email}</div>
+            <div className="font-bold text-lg">{profile?.display_name || user?.email}</div>
             <div className="text-sm text-muted">{user?.email}</div>
           </div>
           <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
-            {(userProfile?.displayName || user?.email || "U")[0].toUpperCase()}
+            {(profile?.display_name || user?.email || "U")[0].toUpperCase()}
           </div>
         </div>
       </div>
@@ -80,14 +86,14 @@ export default function Dashboard() {
         <section className="glass-panel p-6">
           <h2 className="text-h3 mb-6">IMDb Integration</h2>
           
-          {userProfile?.imdbSynced ? (
+          {profile?.imdb_synced ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-4 bg-surface/50 rounded-lg border border-primary/20">
                 <span className="text-2xl">✓</span>
                 <div className="flex-1">
                   <div className="font-bold text-primary">Connected</div>
                   <div className="text-xs text-muted truncate">
-                    {userProfile.imdbProfileUrl}
+                    {profile.imdb_profile_url}
                   </div>
                 </div>
               </div>
@@ -160,8 +166,8 @@ export default function Dashboard() {
           <h2 className="text-h3 mb-6">Active Bids</h2>
           <div className="text-center py-12 border border-dashed border-white/10 rounded-lg">
             <p className="text-muted">
-              {userProfile?.imdbSynced 
-                ? "No active bids found. Browse projects to place a bid!" 
+              {profile?.imdb_synced
+                ? "No active bids found. Browse projects to place a bid!"
                 : "Connect your IMDb profile to start bidding on projects."}
             </p>
           </div>

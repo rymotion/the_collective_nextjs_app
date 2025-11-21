@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Input from "@/components/Input";
@@ -14,7 +14,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   
-  const { signUp } = useAuth();
+  const { signUp } = useSupabaseAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {

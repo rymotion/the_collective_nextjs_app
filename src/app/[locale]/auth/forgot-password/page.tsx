@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Input from "@/components/Input";
@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  const { resetPassword } = useAuth();
+  const { resetPassword } = useSupabaseAuth();
   const t = useTranslations('Auth');
 
   const handleSubmit = async (e: React.FormEvent) => {

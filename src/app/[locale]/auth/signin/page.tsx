@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Input from "@/components/Input";
@@ -12,7 +12,7 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   
-  const { signIn } = useAuth();
+  const { signIn } = useSupabaseAuth();
   const router = useRouter();
   const t = useTranslations('Auth');
 
