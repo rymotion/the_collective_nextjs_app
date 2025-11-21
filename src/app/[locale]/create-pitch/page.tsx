@@ -54,6 +54,7 @@ export default function CreatePitchPage() {
   const [crewMembers, setCrewMembers] = useState<CrewMember[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [draftId, setDraftId] = useState<string | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -172,22 +173,35 @@ export default function CreatePitchPage() {
   };
 
   const nextStep = () => {
-    if (currentStep < 5) setCurrentStep(currentStep + 1);
+    if (currentStep < 5) {
+      setCompletedSteps(prev => new Set(prev).add(currentStep));
+      setCurrentStep(currentStep + 1);
+    }
   };
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const goToStep = (step: number) => {
+    if (step <= currentStep || completedSteps.has(step - 1)) {
+      setCurrentStep(step);
+    }
+  };
+
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return formData.title.trim().length > 0;
+      case 1: return formData.title.trim().length > 0 && formData.genre !== '';
       case 2: return formData.synopsis.trim().length > 0;
       case 3: return formData.country_of_origin !== '';
       case 4: return formData.goal > 0 && formData.funding_duration_days > 0;
       case 5: return true;
       default: return false;
     }
+  };
+
+  const isStepRequired = (step: number) => {
+    return step !== 5;
   };
 
   if (loading) {
@@ -205,35 +219,98 @@ export default function CreatePitchPage() {
   return (
     <div className="w-full page-content">
       <div className="container-narrow">
-        <div className="mb-12">
+        <div className="mb-8">
           <h1 className="text-h1 mb-4">Create Your Pitch</h1>
           <p className="text-subtitle">
             Share your cinematic vision with the community
           </p>
         </div>
 
-        <div className="mb-12">
+        <div className="glass-panel p-6 mb-8 border-2 border-primary/30">
           <div className="flex items-center justify-between">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div key={step} className="flex items-center flex-1">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                    step <= currentStep
-                      ? 'bg-primary text-white'
-                      : 'bg-surface text-muted border-2 border-white/10'
-                  }`}
-                >
-                  {step}
-                </div>
-                {step < 5 && (
-                  <div
-                    className={`flex-1 h-1 mx-2 transition-all ${
-                      step < currentStep ? 'bg-primary' : 'bg-surface'
-                    }`}
-                  />
-                )}
+            <div>
+              <h3 className="text-lg font-bold mb-1">Workflow Progress</h3>
+              <p className="text-sm text-muted">
+                Complete all required steps to publish your project
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold text-primary">
+                {completedSteps.size}/5
               </div>
-            ))}
+              <div className="text-xs text-muted">Steps Completed</div>
+            </div>
+          </div>
+          {draftId && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="flex items-center gap-2 text-sm text-green-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Draft saved - Your progress is secure
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-4">
+            {[1, 2, 3, 4, 5].map((step) => {
+              const isCompleted = completedSteps.has(step);
+              const isCurrent = step === currentStep;
+              const isClickable = step <= currentStep || completedSteps.has(step - 1);
+
+              return (
+                <div key={step} className="flex items-center flex-1">
+                  <button
+                    onClick={() => goToStep(step)}
+                    disabled={!isClickable}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all relative ${
+                      isCompleted
+                        ? 'bg-green-600 text-white'
+                        : isCurrent
+                        ? 'bg-primary text-white ring-4 ring-primary/30'
+                        : isClickable
+                        ? 'bg-surface text-muted border-2 border-white/10 hover:border-primary cursor-pointer'
+                        : 'bg-surface text-muted border-2 border-white/10 opacity-50 cursor-not-allowed'
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    ) : (
+                      step
+                    )}
+                  </button>
+                  {step < 5 && (
+                    <div
+                      className={`flex-1 h-1 mx-2 transition-all ${
+                        completedSteps.has(step) ? 'bg-green-600' : 'bg-surface'
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-muted px-1">
+            <span className={currentStep === 1 ? 'text-primary font-bold' : ''}>
+              Title {isStepRequired(1) && <span className="text-red-500">*</span>}
+            </span>
+            <span className={currentStep === 2 ? 'text-primary font-bold' : ''}>
+              Synopsis {isStepRequired(2) && <span className="text-red-500">*</span>}
+            </span>
+            <span className={currentStep === 3 ? 'text-primary font-bold' : ''}>
+              Country {isStepRequired(3) && <span className="text-red-500">*</span>}
+            </span>
+            <span className={currentStep === 4 ? 'text-primary font-bold' : ''}>
+              Funding {isStepRequired(4) && <span className="text-red-500">*</span>}
+            </span>
+            <span className={currentStep === 5 ? 'text-primary font-bold' : ''}>
+              Crew (Optional)
+            </span>
           </div>
         </div>
 
