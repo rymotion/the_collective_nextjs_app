@@ -2,6 +2,7 @@ import { getProject } from "@/data/mockData";
 import ProjectDetails from "@/components/ProjectDetails";
 import { notFound } from "next/navigation";
 import BidButton from "@/components/BidButton";
+import FundButton from "@/components/FundButton";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -126,8 +127,6 @@ export default async function ProjectPage({ params }: PageProps) {
             </div>
           </section>
 
-import BidButton from "@/components/BidButton";
-
           {/* Bid to Work Section */}
           <section className="glass-panel p-8 border-primary/30 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -164,9 +163,7 @@ import BidButton from "@/components/BidButton";
                 />
               </div>
               
-              <button className="btn btn-primary w-full text-xl py-4 shadow-lg shadow-primary/20">
-                Fund This Project
-              </button>
+              <FundButton projectId={id} />
             </div>
 
             <h4 className="text-h3 mb-4">Recent Backers</h4>
