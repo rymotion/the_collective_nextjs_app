@@ -45,21 +45,15 @@ export default function SearchPage() {
         <div className="container-narrow mx-auto mb-12">
           <h1 className="text-h1 mb-8 text-center">Search Projects</h1>
 
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search by title, author, genre, or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-6 py-5 bg-surface border-2 border-white/10 rounded-xl text-foreground text-lg placeholder:text-muted focus:outline-none focus:border-primary transition-all shadow-lg focus:shadow-primary/20"
-            />
+          <div className="flex items-center gap-4 bg-surface border-2 border-white/10 rounded-xl px-6 py-5 shadow-lg focus-within:border-primary focus-within:shadow-primary/20 transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2.5}
+              scale={0.25}
               stroke="currentColor"
-              className="w-6 h-6 absolute right-5 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
+              className="w-6 h-6 text-muted shrink-0"
             >
               <path
                 strokeLinecap="round"
@@ -67,6 +61,13 @@ export default function SearchPage() {
                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
               />
             </svg>
+            <input
+              type="text"
+              placeholder="Search by title, author, genre, or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent text-foreground text-lg placeholder:text-muted focus:outline-none"
+            />
           </div>
         </div>
 
@@ -90,21 +91,6 @@ export default function SearchPage() {
               </div>
             ) : (
               <div className="text-center py-20">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-20 h-20 mx-auto mb-6 text-muted opacity-50"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
-                </svg>
-                <p className="text-h3 text-muted mb-4">No projects found</p>
                 <p className="text-body text-muted max-w-md mx-auto">
                   Try adjusting your search terms or explore different keywords
                 </p>

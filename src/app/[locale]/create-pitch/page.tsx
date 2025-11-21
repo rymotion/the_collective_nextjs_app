@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useSupabaseAuth } from '@/context/SupabaseAuthContext';
 import { ProjectsService } from '@/services/projects.service';
 import { CrewInvitationsService } from '@/services/crew-invitations.service';
+import Input from '@/components/Input';
+import TextArea from '@/components/TextArea';
+import Select from '@/components/Select';
 
 interface PitchFormData {
   title: string;
@@ -318,32 +321,24 @@ export default function CreatePitchPage() {
           {currentStep === 1 && (
             <div>
               <h2 className="text-h2 mb-6">Step 1: Film Title</h2>
-              <div>
-                <label className="block text-sm font-bold mb-2">
-                  What is the title of your film?
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  placeholder="Enter your film title"
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all"
-                />
-              </div>
+              <Input
+                label="What is the title of your film?"
+                type="text"
+                value={formData.title}
+                onChange={(value) => handleInputChange('title', value)}
+                placeholder="Enter your film title"
+                required
+              />
 
-              <div className="mt-6">
-                <label className="block text-sm font-bold mb-2">Genre</label>
-                <select
-                  value={formData.genre}
-                  onChange={(e) => handleInputChange('genre', e.target.value)}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground focus:outline-none focus:border-primary transition-all"
-                >
-                  <option value="">Select a genre</option>
-                  {GENRES.map(genre => (
-                    <option key={genre} value={genre}>{genre}</option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                label="Genre"
+                value={formData.genre}
+                onChange={(value) => handleInputChange('genre', value)}
+                options={GENRES.map(genre => ({ value: genre, label: genre }))}
+                placeholder="Select a genre"
+                required
+                className="mt-6"
+              />
             </div>
           )}
 
@@ -351,72 +346,59 @@ export default function CreatePitchPage() {
             <div>
               <h2 className="text-h2 mb-6">Step 2: Story Summary</h2>
 
-              <div className="mb-6">
-                <label className="block text-sm font-bold mb-2">
-                  Film Synopsis
-                </label>
-                <textarea
-                  value={formData.synopsis}
-                  onChange={(e) => handleInputChange('synopsis', e.target.value)}
-                  placeholder="Provide a compelling summary of your film..."
-                  rows={6}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all resize-none"
-                />
-              </div>
+              <TextArea
+                label="Film Synopsis"
+                value={formData.synopsis}
+                onChange={(value) => handleInputChange('synopsis', value)}
+                placeholder="Provide a compelling summary of your film..."
+                rows={6}
+                autoResize
+                required
+                className="mb-6"
+              />
 
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Beginning</label>
-                <textarea
-                  value={formData.beginning}
-                  onChange={(e) => handleInputChange('beginning', e.target.value)}
-                  placeholder="What happens at the beginning?"
-                  rows={3}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all resize-none"
-                />
-              </div>
+              <TextArea
+                label="Beginning"
+                value={formData.beginning}
+                onChange={(value) => handleInputChange('beginning', value)}
+                placeholder="What happens at the beginning?"
+                rows={3}
+                autoResize
+                className="mb-4"
+              />
 
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Middle</label>
-                <textarea
-                  value={formData.middle}
-                  onChange={(e) => handleInputChange('middle', e.target.value)}
-                  placeholder="What happens in the middle?"
-                  rows={3}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all resize-none"
-                />
-              </div>
+              <TextArea
+                label="Middle"
+                value={formData.middle}
+                onChange={(value) => handleInputChange('middle', value)}
+                placeholder="What happens in the middle?"
+                rows={3}
+                autoResize
+                className="mb-4"
+              />
 
-              <div>
-                <label className="block text-sm font-bold mb-2">End</label>
-                <textarea
-                  value={formData.end}
-                  onChange={(e) => handleInputChange('end', e.target.value)}
-                  placeholder="What happens at the end?"
-                  rows={3}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all resize-none"
-                />
-              </div>
+              <TextArea
+                label="End"
+                value={formData.end}
+                onChange={(value) => handleInputChange('end', value)}
+                placeholder="What happens at the end?"
+                rows={3}
+                autoResize
+              />
             </div>
           )}
 
           {currentStep === 3 && (
             <div>
               <h2 className="text-h2 mb-6">Step 3: Country of Origin</h2>
-              <div>
-                <label className="block text-sm font-bold mb-2">
-                  Where will this film be made?
-                </label>
-                <select
-                  value={formData.country_of_origin}
-                  onChange={(e) => handleInputChange('country_of_origin', e.target.value)}
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground focus:outline-none focus:border-primary transition-all"
-                >
-                  <option value="">Select a country</option>
-                  {COUNTRIES.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                label="Where will this film be made?"
+                value={formData.country_of_origin}
+                onChange={(value) => handleInputChange('country_of_origin', value)}
+                options={COUNTRIES.map(country => ({ value: country, label: country }))}
+                placeholder="Select a country"
+                required
+              />
             </div>
           )}
 
@@ -424,33 +406,30 @@ export default function CreatePitchPage() {
             <div>
               <h2 className="text-h2 mb-6">Step 4: Funding Goal</h2>
 
-              <div className="mb-6">
-                <label className="block text-sm font-bold mb-2">
-                  Funding Goal (USD)
-                </label>
-                <input
-                  type="number"
-                  value={formData.goal || ''}
-                  onChange={(e) => handleInputChange('goal', parseInt(e.target.value) || 0)}
-                  placeholder="Enter your funding goal"
-                  min="0"
-                  step="1000"
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all"
-                />
-              </div>
+              <Input
+                label="Funding Goal (USD)"
+                type="number"
+                value={formData.goal?.toString() || ''}
+                onChange={(value) => handleInputChange('goal', parseInt(value) || 0)}
+                placeholder="Enter your funding goal"
+                required
+                className="mb-6"
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path d="M10.75 10.818v2.614A3.13 3.13 0 0011.888 13c.482-.315.612-.648.612-.875 0-.227-.13-.56-.612-.875a3.13 3.13 0 00-1.138-.432zM8.33 8.62c.053.055.115.11.184.164.208.16.46.284.736.363V6.603a2.45 2.45 0 00-.35.13c-.14.065-.27.143-.386.233-.377.292-.514.627-.514.909 0 .184.058.39.202.592.037.051.08.102.128.152z" />
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-6a.75.75 0 01.75.75v.316a3.78 3.78 0 011.653.713c.426.33.744.74.925 1.2a.75.75 0 01-1.395.55 1.35 1.35 0 00-.447-.563 2.187 2.187 0 00-.736-.363V9.3c.698.093 1.383.32 1.959.696.787.514 1.29 1.27 1.29 2.13 0 .86-.504 1.616-1.29 2.13-.576.377-1.261.603-1.96.696v.299a.75.75 0 11-1.5 0v-.3c-.697-.092-1.382-.318-1.958-.695-.482-.315-.857-.717-1.078-1.188a.75.75 0 111.359-.636c.08.173.245.376.54.569.313.205.706.353 1.138.432v-2.748a3.782 3.782 0 01-1.653-.713C6.9 9.433 6.5 8.681 6.5 7.875c0-.805.4-1.558 1.097-2.096a3.78 3.78 0 011.653-.713V4.75A.75.75 0 0110 4z" clipRule="evenodd" />
+                  </svg>
+                }
+              />
 
               <div>
-                <label className="block text-sm font-bold mb-2">
-                  Funding Duration (Days)
-                </label>
-                <input
+                <Input
+                  label="Funding Duration (Days)"
                   type="number"
-                  value={formData.funding_duration_days}
-                  onChange={(e) => handleInputChange('funding_duration_days', parseInt(e.target.value) || 0)}
+                  value={formData.funding_duration_days.toString()}
+                  onChange={(value) => handleInputChange('funding_duration_days', parseInt(value) || 0)}
                   placeholder="Enter funding duration"
-                  min="1"
-                  max="365"
-                  className="w-full px-4 py-3 bg-surface border-2 border-white/10 rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-primary transition-all"
+                  required
                 />
                 <p className="text-caption mt-2">
                   How many days should the funding campaign last?
