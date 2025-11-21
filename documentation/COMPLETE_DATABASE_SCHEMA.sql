@@ -21,6 +21,40 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Function to generate unique project code
+CREATE OR REPLACE FUNCTION generate_project_code()
+RETURNS text AS $$
+DECLARE
+  chars text := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  result text := 'PRJ-';
+  i integer;
+  code_exists boolean;
+  generated_code text;
+BEGIN
+  LOOP
+    generated_code := result;
+
+    -- Generate 8 random characters
+    FOR i IN 1..8 LOOP
+      generated_code := generated_code || substr(chars, floor(random() * length(chars) + 1)::integer, 1);
+
+      -- Add hyphen after 4th character for readability (PRJ-XXXX-XXXX)
+      IF i = 4 THEN
+        generated_code := generated_code || '-';
+      END IF;
+    END LOOP;
+
+    -- Check if code already exists
+    SELECT EXISTS(SELECT 1 FROM projects WHERE project_code = generated_code) INTO code_exists;
+
+    -- If code doesn't exist, we found a unique one
+    IF NOT code_exists THEN
+      RETURN generated_code;
+    END IF;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- TABLE: profiles
 -- =====================================================
@@ -48,9 +82,14 @@ CREATE TRIGGER update_profiles_updated_at
 -- TABLE: projects
 -- =====================================================
 -- Film projects seeking funding (includes draft functionality)
+--
+-- project_code: Unique human-readable identifier (e.g., PRJ-A7B2-K9M4)
+--               Automatically generated on creation
+--               Used for easy project identification and sharing
 
 CREATE TABLE IF NOT EXISTS projects (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  project_code text UNIQUE NOT NULL DEFAULT generate_project_code(),
   title text NOT NULL,
   author_id uuid REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   synopsis text NOT NULL,
@@ -73,6 +112,7 @@ CREATE INDEX IF NOT EXISTS idx_projects_author ON projects(author_id);
 CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
 CREATE INDEX IF NOT EXISTS idx_projects_genre ON projects(genre);
 CREATE INDEX IF NOT EXISTS idx_projects_is_published ON projects(is_published);
+CREATE INDEX IF NOT EXISTS idx_projects_code ON projects(project_code);
 
 -- Trigger to auto-update updated_at and modified_at
 CREATE TRIGGER update_projects_updated_at
