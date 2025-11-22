@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Link, useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import Input from "@/components/Input";
 
 export default function SignUpPage() {
@@ -13,9 +13,29 @@ export default function SignUpPage() {
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  const { signUp } = useSupabaseAuth();
+
+  const { signUp, isAuthenticated, loading: authLoading } = useSupabaseAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Track if we've already redirected to prevent double redirects
+  const hasRedirected = useRef(false);
+
+  // Get redirect parameter from URL
+  const redirectPath = searchParams.get('redirect') || '/dashboard';
+
+  // Handle redirect after successful authentication
+  useEffect(() => {
+    if (isAuthenticated && !authLoading && !hasRedirected.current) {
+      hasRedirected.current = true;
+
+      const finalPath = redirectPath.startsWith('/') ? redirectPath : `/${redirectPath}`;
+
+      setTimeout(() => {
+        router.push(finalPath);
+      }, 100);
+    }
+  }, [isAuthenticated, authLoading, redirectPath, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +55,9 @@ export default function SignUpPage() {
 
     try {
       await signUp(email, password, displayName);
-      router.push("/dashboard");
+      // Don't redirect here - let the useEffect handle it after auth state updates
     } catch (err: any) {
       setError(err.message || "Failed to sign up");
-    } finally {
       setLoading(false);
     }
   };
@@ -130,7 +149,10 @@ export default function SignUpPage() {
 
         <p className="text-center text-sm text-muted mt-6">
           Already have an account?{" "}
-          <Link href="/auth/signin" className="text-primary hover:text-white transition-colors font-medium">
+          <Link
+            href={`/auth/signin${redirectPath !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectPath)}` : ''}`}
+            className="text-primary hover:text-white transition-colors font-medium"
+          >
             Sign in
           </Link>
         </p>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { Link, useRouter } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import Input from "@/components/Input";
 
 export default function SignInPage() {
@@ -11,10 +12,37 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  const { signIn } = useSupabaseAuth();
+
+  const { signIn, isAuthenticated, loading: authLoading } = useSupabaseAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const locale = useLocale();
   const t = useTranslations('Auth');
+
+  // Track if we've already redirected to prevent double redirects
+  const hasRedirected = useRef(false);
+
+  // Get redirect parameter from URL
+  const redirectPath = searchParams.get('redirect') || '/dashboard';
+
+  // Handle redirect after successful authentication
+  useEffect(() => {
+    // Only redirect if:
+    // 1. User is authenticated
+    // 2. Auth is not loading
+    // 3. We haven't already redirected
+    if (isAuthenticated && !authLoading && !hasRedirected.current) {
+      hasRedirected.current = true;
+
+      // Use the redirect parameter or default to dashboard
+      const finalPath = redirectPath.startsWith('/') ? redirectPath : `/${redirectPath}`;
+
+      // Small delay to ensure auth state is fully propagated
+      setTimeout(() => {
+        router.push(finalPath);
+      }, 100);
+    }
+  }, [isAuthenticated, authLoading, redirectPath, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +51,9 @@ export default function SignInPage() {
 
     try {
       await signIn(email, password);
-      router.push("/dashboard");
+      // Don't redirect here - let the useEffect handle it after auth state updates
     } catch (err: any) {
       setError(err.message || "Failed to sign in");
-    } finally {
       setLoading(false);
     }
   };
@@ -95,7 +122,10 @@ export default function SignInPage() {
 
         <p className="text-center text-sm text-muted mt-6">
           {t('noAccount')}{" "}
-          <Link href="/auth/signup" className="text-primary hover:text-white transition-colors font-medium">
+          <Link
+            href={`/auth/signup${redirectPath !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectPath)}` : ''}`}
+            className="text-primary hover:text-white transition-colors font-medium"
+          >
             {t('signUp')}
           </Link>
         </p>
