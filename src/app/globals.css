@@ -34,6 +34,13 @@
   --container-max: 1536px;
   --section-padding: var(--spacing-8);
 
+  /* Icon Sizes */
+  --icon-xs: 12px;  /* 0.75rem - Very small icons */
+  --icon-sm: 16px;  /* 1rem - Small icons (form inputs, inline) */
+  --icon-md: 20px;  /* 1.25rem - Medium icons (buttons, default) */
+  --icon-lg: 24px;  /* 1.5rem - Large icons (navigation, headers) */
+  --icon-xl: 32px;  /* 2rem - Extra large icons (hero sections) */
+
   /* Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -455,6 +462,28 @@ main {
   }
 }
 
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }
@@ -469,6 +498,14 @@ main {
 
 .animate-shimmer {
   animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-toast-enter {
+  animation: toast-enter 0.3s ease-out forwards;
+}
+
+.animate-toast-exit {
+  animation: toast-exit 0.3s ease-in forwards;
 }
 
 /* Scrollbar Hide Utility */
