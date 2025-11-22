@@ -1,0 +1,22 @@
+import { CacheHandler } from '@neshca/cache-handler';
+import createLruHandler from '@neshca/cache-handler/local-lru';
+import { PHASE_PRODUCTION_BUILD } from 'next/constants.js';
+
+CacheHandler.onCreation(async ({ buildId, defaultHandler }) => {
+  // Use default handler during build
+  if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) {
+    return defaultHandler;
+  }
+
+  // Create LRU cache handler for runtime
+  const lruHandler = createLruHandler({
+    maxItemsNumber: 10000,
+    maxItemSizeBytes: 1024 * 1024 * 500, // 500 MB
+  });
+
+  return {
+    handlers: [lruHandler, defaultHandler],
+  };
+});
+
+export default CacheHandler;

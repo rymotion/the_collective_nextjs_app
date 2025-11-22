@@ -2,15 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
   "headers": [
     {
-      "source": "/(.*)\\.(js|css|woff|woff2|ttf|otf|eot|ico|png|jpg|jpeg|svg|gif|webp)",
+      "source": "/_next/static/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -19,7 +13,7 @@
       ]
     },
     {
-      "source": "/_next/static/(.*)",
+      "source": "/(.*)\\.(js|css|woff|woff2|ttf|otf|eot|ico|png|jpg|jpeg|svg|gif|webp|avif)",
       "headers": [
         {
           "key": "Cache-Control",
