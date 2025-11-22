@@ -38,6 +38,7 @@ export interface Project {
   accolades: Accolade[];
   funders: Funder[];
   createdAt: string;
+  deadline?: string;
 }
 
 const MOCK_USERS: User[] = [];

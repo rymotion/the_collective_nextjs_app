@@ -114,8 +114,8 @@ export default function Navigation() {
           </Link>
 
           {!loading && (
-            <>
-              {isAuthenticated ? (
+            <div className="flex items-center gap-4">
+              {isAuthenticated && (
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -141,36 +141,29 @@ export default function Navigation() {
                       <div className="px-4 py-2 border-b border-white/5">
                         <p className="text-sm font-medium truncate">{profile?.display_name || user?.email}</p>
                       </div>
-                      <Link 
-                        href="/dashboard" 
+                      <Link
+                        href="/dashboard"
                         className="block px-4 py-2 text-sm hover:bg-white/5 transition-colors"
                         onClick={() => setIsProfileOpen(false)}
                       >
                         {t('dashboard')}
                       </Link>
-                      <button
-                        onClick={() => {
-                          handleAuthAction();
-                          setIsProfileOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-white/5 transition-colors"
-                      >
-                        {t('signOut')}
-                      </button>
                     </div>
                   )}
                 </div>
-              ) : (
-                <Link
-                  href="/auth/signin"
-                  className={`btn btn-primary transition-all duration-300 ${
-                    shouldExpand ? 'text-base py-3 px-6' : 'text-sm py-2 px-4'
-                  }`}
-                >
-                  {t('signIn')}
-                </Link>
               )}
-            </>
+
+              <button
+                onClick={handleAuthAction}
+                className={`font-semibold transition-all duration-300 ${
+                  isAuthenticated
+                    ? 'text-red-500 hover:text-red-400'
+                    : 'btn btn-primary'
+                } ${shouldExpand ? 'text-base py-3 px-6' : 'text-sm py-2 px-4'}`}
+              >
+                {isAuthenticated ? 'Logout' : 'Login'}
+              </button>
+            </div>
           )}
         </div>
       </div>
