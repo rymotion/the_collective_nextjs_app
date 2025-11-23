@@ -1,18 +1,17 @@
-import { PageLayout, Section, Grid, Hero } from '@/components/layouts';
-import { Link } from '@/i18n/routing';
-import PitchCard from '@/components/pitch/PitchCard';
-import { PitchesService } from '@/services/pitches.service';
+import { PageLayout, Section, Grid, Hero } from "@/components/layouts";
+import { Link } from "@/i18n/routing";
+import PitchCard from "@/components/pitch/PitchCard";
+import { PitchesService } from "@/services/pitches.service";
 
 export default async function PitchesPage() {
   let pitches: any[] = [];
   let error = null;
 
   try {
-    const result = await PitchesService.getAllPitches(20);
-    pitches = result.data || [];
+    pitches = await PitchesService.getAllPitches(20);
   } catch (err) {
-    console.error('Error fetching pitches:', err);
-    error = 'Failed to load pitches';
+    console.error("Error fetching pitches:", err);
+    error = "Failed to load pitches";
   }
 
   return (
@@ -27,7 +26,10 @@ export default async function PitchesPage() {
             }
             subtitle="Discover and support creative film projects from talented creators around the world."
             action={
-              <Link href="/create-pitch" className="btn btn-primary text-lg px-8 py-4">
+              <Link
+                href="/create-pitch"
+                className="btn btn-primary text-lg px-8 py-4"
+              >
                 Submit Your Pitch
               </Link>
             }
