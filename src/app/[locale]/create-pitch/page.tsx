@@ -100,6 +100,8 @@ export default function CreatePitchPage() {
         country_of_origin: formData.country_of_origin,
         funding_duration_days: formData.funding_duration_days,
         is_published: false,
+        is_pitch: true,
+        pitch_status: 'draft',
       };
 
       if (draftId) {
@@ -138,6 +140,8 @@ export default function CreatePitchPage() {
         country_of_origin: formData.country_of_origin,
         funding_duration_days: formData.funding_duration_days,
         is_published: true,
+        is_pitch: true,
+        pitch_status: 'published',
         status: 'active' as const,
         deadline: deadline.toISOString(),
       };
@@ -166,7 +170,7 @@ export default function CreatePitchPage() {
       }
 
       alert('Project published successfully!');
-      router.push(`/projects/${projectId}`);
+      router.push(`/pitches/${projectId}`);
     } catch (error) {
       console.error('Error publishing project:', error);
       alert('Failed to publish project. Please try again.');
