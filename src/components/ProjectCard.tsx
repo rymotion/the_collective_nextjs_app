@@ -6,11 +6,15 @@ interface ProjectCardProps {
   id: string;
   title: string;
   author: string;
-  imageUrl: string;
+  imageUrl?: string;
   raised: number;
   goal: number;
   genre: string;
   deadline?: string;
+  synopsis?: string;
+  workRequestsCount?: number;
+  commentsCount?: number;
+  pitchStatus?: string;
 }
 
 export default function ProjectCard({
@@ -22,6 +26,10 @@ export default function ProjectCard({
   goal,
   genre,
   deadline,
+  synopsis,
+  workRequestsCount = 0,
+  commentsCount = 0,
+  pitchStatus,
 }: ProjectCardProps) {
   const progress = Math.min((raised / goal) * 100, 100);
   const daysLeft = deadline
@@ -31,24 +39,60 @@ export default function ProjectCard({
     : null;
 
   return (
-    <Link href={`/projects/${id}`} className="group block">
+    <Link href={`/pitches/${id}`} className="group block">
       <article className="flex flex-col h-full bg-surface rounded-xl border border-white/10 overflow-hidden transition-all hover:border-primary/50 hover:shadow-xl hover:-translate-y-1">
-        <div className="relative aspect-[4/3] bg-black overflow-hidden">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+        {/* Project Image */}
+        <div className="relative aspect-[4/3] overflow-hidden">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+              <div className="text-6xl opacity-20">🎬</div>
+            </div>
+          )}
           <span className="absolute top-3 left-3 px-3 py-1 text-xs font-bold bg-black/60 backdrop-blur-sm rounded-full uppercase tracking-wider">
             {genre}
           </span>
+          {pitchStatus === "funded" && (
+            <span className="absolute top-3 right-3 px-3 py-1 text-xs font-bold bg-green-500/20 text-green-500 backdrop-blur-sm rounded-full">
+              Funded
+            </span>
+          )}
         </div>
 
         <div className="flex-1 flex flex-col p-5">
           <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {title}
           </h3>
-          <p className="text-sm text-muted mb-4">by {author}</p>
+          <p className="text-sm text-muted mb-2">by {author}</p>
+
+          {/* Synopsis */}
+          {synopsis && (
+            <p className="text-sm text-muted line-clamp-2 mb-4">{synopsis}</p>
+          )}
+
+          {/* Tags */}
+          {(workRequestsCount > 0 || commentsCount > 0) && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {workRequestsCount > 0 && (
+                <span className="px-2 py-1 text-xs font-bold bg-surface border border-white/10 rounded-full">
+                  {workRequestsCount} work requests
+                </span>
+              )}
+              {commentsCount > 0 && (
+                <span className="px-2 py-1 text-xs font-bold bg-surface border border-white/10 rounded-full">
+                  {commentsCount} comments
+                </span>
+              )}
+            </div>
+          )}
 
           <div className="mt-auto">
             <div className="h-1.5 w-full bg-white/10 rounded-full mb-3 overflow-hidden">
@@ -60,9 +104,7 @@ export default function ProjectCard({
 
             <div className="flex justify-between items-end">
               <div>
-                <p className="text-lg font-bold">
-                  ${raised.toLocaleString()}
-                </p>
+                <p className="text-lg font-bold">${raised.toLocaleString()}</p>
                 <p className="text-xs text-muted">pledged</p>
               </div>
               {daysLeft !== null && (
@@ -73,6 +115,11 @@ export default function ProjectCard({
                   <p className="text-xs text-muted">days left</p>
                 </div>
               )}
+            </div>
+
+            {/* Funding Progress Percentage */}
+            <div className="text-xs text-muted text-right mt-1">
+              {progress.toFixed(1)}% funded
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from "@/lib/supabase";
 
 export interface PitchData {
   title: string;
@@ -13,27 +13,125 @@ export interface PitchData {
 
 export class PitchesService {
   static async getAllPitches(limit = 20, offset = 0) {
-    const { data, error, count } = await supabase
-      .from('projects')
-      .select(`
-        *,
-        author:profiles!author_id(display_name, avatar_url),
-        work_requests(count),
-        comments(count)
-      `, { count: 'exact' })
-      .eq('is_pitch', true)
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    try {
+      const { data, error, count } = await supabase
+        .from("projects")
+        .select(
+          `
+          *,
+          author:profiles!author_id(display_name, avatar_url),
+          work_requests(count),
+          comments(count)
+        `,
+          { count: "exact" }
+        )
+        .eq("is_pitch", true)
+        .eq("is_published", true)
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
 
-    if (error) throw error;
-    return { data: data || [], count: count || 0 };
+      if (error) {
+        console.error("Error fetching pitches:", error);
+        throw error;
+      }
+
+      // Transform the data to match expected structure with proper counts
+      const transformedData = (data || []).map((pitch) => ({
+        ...pitch,
+        work_requests_count: Array.isArray(pitch.work_requests)
+          ? pitch.work_requests.length
+          : 0,
+        comments_count: Array.isArray(pitch.comments)
+          ? pitch.comments.length
+          : 0,
+      }));
+
+      return transformedData;
+    } catch (error) {
+      console.error("Error in getAllPitches:", error);
+      throw error;
+    }
+  }
+
+  // Get featured pitches (for hero section or carousel)
+  static async getFeaturedPitches(limit = 5) {
+    try {
+      const { data, error } = await supabase
+        .from("projects")
+        .select(
+          `
+          *,
+          author:profiles!author_id(display_name, avatar_url),
+          work_requests(count),
+          comments(count)
+        `
+        )
+        .eq("is_pitch", true)
+        .eq("is_published", true)
+        .eq("status", "active")
+        .order("raised", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+
+      return (data || []).map((pitch) => ({
+        ...pitch,
+        work_requests_count: Array.isArray(pitch.work_requests)
+          ? pitch.work_requests.length
+          : 0,
+        comments_count: Array.isArray(pitch.comments)
+          ? pitch.comments.length
+          : 0,
+      }));
+    } catch (error) {
+      console.error("Error fetching featured pitches:", error);
+      return [];
+    }
+  }
+
+  // Get pitches by genre
+  static async getPitchesByGenre(genre: string, limit = 10) {
+    try {
+      const { data, error } = await supabase
+        .from("projects")
+        .select(
+          `
+          *,
+          author:profiles!author_id(display_name, avatar_url),
+          work_requests(count),
+          comments(count)
+        `
+        )
+        .eq("is_pitch", true)
+        .eq("is_published", true)
+        .eq("status", "active")
+        .eq("genre", genre)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+
+      return (data || []).map((pitch) => ({
+        ...pitch,
+        work_requests_count: Array.isArray(pitch.work_requests)
+          ? pitch.work_requests.length
+          : 0,
+        comments_count: Array.isArray(pitch.comments)
+          ? pitch.comments.length
+          : 0,
+      }));
+    } catch (error) {
+      console.error("Error fetching pitches by genre:", error);
+      return [];
+    }
   }
 
   static async getPitch(pitchId: string) {
     const { data, error } = await supabase
-      .from('projects')
-      .select(`
+      .from("projects")
+      .select(
+        `
         *,
         author:profiles!author_id(display_name, avatar_url, id),
         work_requests(
@@ -49,9 +147,10 @@ export class PitchesService {
           applicant:profiles!user_id(display_name, avatar_url, id)
         ),
         comments(count)
-      `)
-      .eq('id', pitchId)
-      .eq('is_pitch', true)
+      `
+      )
+      .eq("id", pitchId)
+      .eq("is_pitch", true)
       .maybeSingle();
 
     if (error) throw error;
@@ -62,19 +161,21 @@ export class PitchesService {
     const shareToken = this.generateShareToken();
 
     const { data, error } = await supabase
-      .from('projects')
+      .from("projects")
       .insert({
         ...pitchData,
         is_pitch: true,
-        pitch_status: 'draft',
+        pitch_status: "draft",
         share_token: shareToken,
         external_sharing_enabled: true,
         work_requests_enabled: true,
       })
-      .select(`
+      .select(
+        `
         *,
         author:profiles!author_id(display_name, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
@@ -83,16 +184,18 @@ export class PitchesService {
 
   static async updatePitch(pitchId: string, updates: Partial<PitchData>) {
     const { data, error } = await supabase
-      .from('projects')
+      .from("projects")
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', pitchId)
-      .select(`
+      .eq("id", pitchId)
+      .select(
+        `
         *,
         author:profiles!author_id(display_name, avatar_url)
-      `)
+      `
+      )
       .single();
 
     if (error) throw error;
@@ -101,9 +204,9 @@ export class PitchesService {
 
   static async deletePitch(pitchId: string) {
     const { error } = await supabase
-      .from('projects')
+      .from("projects")
       .delete()
-      .eq('id', pitchId);
+      .eq("id", pitchId);
 
     if (error) throw error;
   }
@@ -111,19 +214,21 @@ export class PitchesService {
   static async publishPitch(pitchId: string) {
     return this.updatePitch(pitchId, {
       is_published: true,
-      pitch_status: 'published',
+      pitch_status: "published",
     } as Partial<PitchData>);
   }
 
   static async getPitchByShareToken(token: string) {
     const { data, error } = await supabase
-      .from('projects')
-      .select(`
+      .from("projects")
+      .select(
+        `
         *,
         author:profiles!author_id(display_name, avatar_url)
-      `)
-      .eq('share_token', token)
-      .eq('external_sharing_enabled', true)
+      `
+      )
+      .eq("share_token", token)
+      .eq("external_sharing_enabled", true)
       .maybeSingle();
 
     if (error) throw error;
@@ -134,10 +239,10 @@ export class PitchesService {
     const token = this.generateShareToken();
 
     const { data, error } = await supabase
-      .from('projects')
+      .from("projects")
       .update({ share_token: token })
-      .eq('id', pitchId)
-      .select('share_token')
+      .eq("id", pitchId)
+      .select("share_token")
       .single();
 
     if (error) throw error;
@@ -145,8 +250,8 @@ export class PitchesService {
   }
 
   static generateShareToken(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let token = '';
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let token = "";
     for (let i = 0; i < 12; i++) {
       token += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -155,15 +260,17 @@ export class PitchesService {
 
   static async getUserPitches(userId: string) {
     const { data, error } = await supabase
-      .from('projects')
-      .select(`
+      .from("projects")
+      .select(
+        `
         *,
         work_requests(count),
         comments(count)
-      `)
-      .eq('author_id', userId)
-      .eq('is_pitch', true)
-      .order('created_at', { ascending: false });
+      `
+      )
+      .eq("author_id", userId)
+      .eq("is_pitch", true)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
