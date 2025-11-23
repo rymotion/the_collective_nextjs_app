@@ -27,7 +27,9 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
   const [amount, setAmount] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [params, setParams] = useState<{ id: string; locale: string } | null>(null);
+  const [params, setParams] = useState<{ id: string; locale: string } | null>(
+    null
+  );
 
   useEffect(() => {
     paramsPromise.then(setParams);
@@ -64,7 +66,11 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      alert(`Successfully pledged $${parseFloat(amount).toFixed(2)} to ${project?.title}!`);
+      alert(
+        `Successfully pledged $${parseFloat(amount).toFixed(2)} to ${
+          project?.title
+        }!`
+      );
 
       if (params) {
         router.push(`/${params.locale}/projects/${params.id}`);
@@ -139,11 +145,17 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="amount" className="block text-sm font-bold mb-2">
+                  <label
+                    htmlFor="amount"
+                    className="block text-sm font-bold mb-2"
+                  >
                     Contribution Amount (USD)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-muted pointer-events-none" aria-hidden="true">
+                    <span
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-muted pointer-events-none"
+                      aria-hidden="true"
+                    >
                       $
                     </span>
                     <input
@@ -178,7 +190,10 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-bold mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-bold mb-2"
+                  >
                     Message (Optional)
                   </label>
                   <textarea
@@ -198,19 +213,39 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
                 <div className="pt-6 border-t border-white/10">
                   <button
                     type="submit"
-                    disabled={isSubmitting || !amount || parseFloat(amount) <= 0}
+                    disabled={
+                      isSubmitting || !amount || parseFloat(amount) <= 0
+                    }
                     className="btn btn-primary w-full text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Processing...
                       </span>
                     ) : (
-                      `Contribute $${amount ? parseFloat(amount).toFixed(2) : "0.00"}`
+                      `Contribute $${
+                        amount ? parseFloat(amount).toFixed(2) : "0.00"
+                      }`
                     )}
                   </button>
                 </div>
@@ -234,10 +269,13 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
                   />
                 </svg>
                 <div className="text-sm text-muted">
-                  <p className="font-bold text-foreground mb-1">Secure Payment</p>
+                  <p className="font-bold text-foreground mb-1">
+                    Secure Payment
+                  </p>
                   <p>
-                    Your contribution is securely processed. Funds will only be released to the
-                    filmmaker if the project reaches its funding goal.
+                    Your contribution is securely processed. Funds will only be
+                    released to the filmmaker if the project reaches its funding
+                    goal.
                   </p>
                 </div>
               </div>
@@ -257,7 +295,12 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
               </div>
 
               <h4 className="text-xl font-bold mb-1">{project.title}</h4>
-              <p className="text-sm text-muted mb-4">by {project.author}</p>
+              <p className="text-sm text-muted mb-4">
+                by{" "}
+                {typeof (project as any).author === "string"
+                  ? (project as any).author
+                  : (project as any).author?.display_name || "Anonymous"}
+              </p>
 
               <div className="mb-4">
                 <span className="px-3 py-1 text-xs font-bold bg-primary/20 text-primary rounded-full border border-primary/20 uppercase tracking-wider">
@@ -274,15 +317,21 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
               <div className="space-y-4 pt-4 border-t border-white/10">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Raised</span>
-                  <span className="font-bold text-primary">${project.raised.toLocaleString()}</span>
+                  <span className="font-bold text-primary">
+                    ${project.raised.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Goal</span>
-                  <span className="font-bold">${project.goal.toLocaleString()}</span>
+                  <span className="font-bold">
+                    ${project.goal.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Progress</span>
-                  <span className="font-bold text-primary">{Math.round(progress)}%</span>
+                  <span className="font-bold text-primary">
+                    {Math.round(progress)}%
+                  </span>
                 </div>
 
                 <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">

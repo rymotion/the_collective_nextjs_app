@@ -197,9 +197,9 @@ export default function MarqueeCarousel({ projects }: MarqueeCarouselProps) {
             </h2>
             <p className="text-subtitle">
               by{" "}
-              {typeof selectedProject.author === "string"
-                ? selectedProject.author
-                : selectedProject.author || "Anonymous"}
+              {typeof (selectedProject as any).author === "string"
+                ? (selectedProject as any).author
+                : (selectedProject as any).author?.display_name || "Anonymous"}
             </p>
           </div>
 
