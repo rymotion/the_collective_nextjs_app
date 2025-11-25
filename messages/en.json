@@ -14,10 +14,10 @@
     "signOut": "Sign Out"
   },
   "Footer": {
-    "rights": "© 2024 The Collective. All rights reserved."
+    "rights": "© 2024 Cinebayan. All rights reserved."
   },
   "Auth": {
-    "welcome": "Welcome Back",
+    "welcome": "Welcome",
     "signInSubtitle": "Sign in to your account",
     "email": "Email",
     "password": "Password",

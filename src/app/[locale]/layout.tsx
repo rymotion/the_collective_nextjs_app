@@ -7,12 +7,12 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
-  title: "The Collective | Screenplay Proposals",
+  title: "Cinebayan | Screenplay Proposals",
   description: "Discover and fund the next big movie hit.",
 };
 
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import { Providers } from "@/components/Providers";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
@@ -21,7 +21,7 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
   const messages = await getMessages();

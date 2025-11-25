@@ -157,6 +157,47 @@ export class PitchesService {
     return data;
   }
 
+  // Get a single pitch with extended relations for detail page
+  static async getPitchWithDetails(pitchId: string) {
+    const { data, error } = await supabase
+      .from("projects")
+      .select(
+        `
+        *,
+        author:profiles!author_id(
+          display_name,
+          avatar_url
+        ),
+        cast_crew:cast_crew(
+          id,
+          type,
+          name,
+          role,
+          image_url
+        ),
+        project_updates:project_updates(
+          id,
+          title,
+          body,
+          created_at,
+          updated_at,
+          is_published
+        ),
+        comments(count)
+      `
+      )
+      .eq("id", pitchId)
+      .eq("is_pitch", true)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error fetching pitch with details:", error);
+      throw error;
+    }
+
+    return data;
+  }
+
   static async createPitch(pitchData: PitchData) {
     const shareToken = this.generateShareToken();
 

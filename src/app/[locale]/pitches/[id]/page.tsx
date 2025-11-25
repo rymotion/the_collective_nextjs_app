@@ -1,13 +1,14 @@
-import { notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { PageLayout, Section } from '@/components/layouts';
-import PitchActions from '@/components/pitch/PitchActions';
-import WorkRequestButton from '@/components/pitch/WorkRequestButton';
-import WorkRequestList from '@/components/pitch/WorkRequestList';
-import FundingButton from '@/components/pitch/FundingButton';
-import RedditCommentBoard from '@/components/comments/RedditCommentBoard';
-import { PitchesService } from '@/services/pitches.service';
+import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
+import { PageLayout, Section } from "@/components/layouts";
+import PitchActions from "@/components/pitch/PitchActions";
+import WorkRequestButton from "@/components/pitch/WorkRequestButton";
+import WorkRequestList from "@/components/pitch/WorkRequestList";
+import FundingButton from "@/components/pitch/FundingButton";
+import RedditCommentBoard from "@/components/comments/RedditCommentBoard";
+import ProjectDetails from "@/components/ProjectDetails";
+import { PitchesService } from "@/services/pitches.service";
 
 interface PitchPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -41,17 +42,18 @@ export default async function PitchPage({ params }: PitchPageProps) {
   } = await supabase.auth.getSession();
   const currentUser = session?.user;
 
-  let pitch = null;
+  let pitch: any = null;
   let error = null;
 
   try {
-    pitch = await PitchesService.getPitch(id);
+    // Load full pitch details including author, cast_crew, project_updates, and comments count
+    pitch = await PitchesService.getPitchWithDetails(id);
     if (!pitch) {
       notFound();
     }
   } catch (err) {
-    console.error('Error loading pitch:', err);
-    error = 'Failed to load pitch';
+    console.error("Error loading pitch:", err);
+    error = "Failed to load pitch";
   }
 
   if (error || !pitch) {
@@ -60,7 +62,7 @@ export default async function PitchPage({ params }: PitchPageProps) {
         <Section spacing="lg">
           <div className="glass-panel p-8 text-center">
             <h2 className="text-2xl font-bold mb-4">Error Loading Pitch</h2>
-            <p className="text-muted">{error || 'Pitch not found'}</p>
+            <p className="text-muted">{error || "Pitch not found"}</p>
           </div>
         </Section>
       </PageLayout>
@@ -68,6 +70,23 @@ export default async function PitchPage({ params }: PitchPageProps) {
   }
 
   const isOwner = currentUser?.id === pitch.author_id;
+
+  // Map cast_crew into ProjectDetails props
+  const cast = (pitch.cast_crew || [])
+    .filter((member: any) => member.type === "cast")
+    .map((member: any) => ({
+      name: member.name,
+      role: member.role,
+      imageUrl: member.image_url,
+    }));
+
+  const crew = (pitch.cast_crew || [])
+    .filter((member: any) => member.type === "crew")
+    .map((member: any) => ({
+      name: member.name,
+      role: member.role,
+      imageUrl: member.image_url,
+    }));
 
   return (
     <PageLayout maxWidth="normal">
@@ -79,7 +98,7 @@ export default async function PitchPage({ params }: PitchPageProps) {
                 <span className="px-3 py-1 text-xs font-bold bg-primary/20 text-primary rounded-full uppercase tracking-wider">
                   {pitch.genre}
                 </span>
-                {pitch.pitch_status === 'funded' && (
+                {pitch.pitch_status === "funded" && (
                   <span className="px-3 py-1 text-xs font-bold bg-green-500/20 text-green-500 rounded-full uppercase tracking-wider">
                     Funded
                   </span>
@@ -87,13 +106,13 @@ export default async function PitchPage({ params }: PitchPageProps) {
               </div>
               <h1 className="text-5xl font-bold mb-4">{pitch.title}</h1>
               <div className="flex items-center gap-4 text-muted">
-                <span>by {pitch.author?.display_name || 'Anonymous'}</span>
+                <span>by {pitch.author?.display_name || "Anonymous"}</span>
                 <span>•</span>
                 <span>
-                  {new Date(pitch.created_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                  {new Date(pitch.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </span>
               </div>
@@ -102,11 +121,15 @@ export default async function PitchPage({ params }: PitchPageProps) {
             <PitchActions pitch={pitch} />
           </div>
 
+          {/* Detailed project information: synopsis, cast, crew, etc. */}
           <div className="glass-panel p-8 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Synopsis</h2>
-            <p className="text-lg leading-relaxed text-muted whitespace-pre-wrap">
-              {pitch.synopsis}
-            </p>
+            <ProjectDetails
+              synopsis={pitch.synopsis}
+              cast={cast}
+              crew={crew}
+              accolades={[]}
+              funders={[]}
+            />
           </div>
         </div>
       </Section>
@@ -122,7 +145,7 @@ export default async function PitchPage({ params }: PitchPageProps) {
                     Funding Goal
                   </h3>
                   <div className="text-4xl font-bold text-primary mb-2">
-                    ${pitch.goal?.toLocaleString() || 'Not specified'}
+                    ${pitch.goal?.toLocaleString() || "Not specified"}
                   </div>
                   {pitch.raised && pitch.raised > 0 && (
                     <>

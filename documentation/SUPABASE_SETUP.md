@@ -1,6 +1,6 @@
 # Complete Supabase Setup Guide
 
-This guide will walk you through setting up Supabase for The Collective application from scratch.
+This guide will walk you through setting up Supabase for Cinebayan application from scratch.
 
 ## Table of Contents
 1. [Create Supabase Project](#1-create-supabase-project)
@@ -91,7 +91,7 @@ Copy and paste this complete SQL migration:
 
 ```sql
 -- =====================================================
--- The Collective - Database Schema
+-- Cinebayan - Database Schema
 -- =====================================================
 
 -- Enable UUID extension

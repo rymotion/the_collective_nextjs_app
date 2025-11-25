@@ -2,7 +2,7 @@
 
 ## Overview
 
-Every project in The Collective now receives a unique, human-readable identification code when created. This provides an easy way to reference and share projects.
+Every project in Cinebayan now receives a unique, human-readable identification code when created. This provides an easy way to reference and share projects.
 
 ---
 

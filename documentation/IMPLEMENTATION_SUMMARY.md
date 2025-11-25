@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the comprehensive backend database implementation and frontend layout optimizations completed for The Collective application.
+This document summarizes the comprehensive backend database implementation and frontend layout optimizations completed for Cinebayan application.
 
 ## Phase 1: Backend Database Implementation
 

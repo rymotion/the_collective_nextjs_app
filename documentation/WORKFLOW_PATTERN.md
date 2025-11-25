@@ -584,7 +584,7 @@ export default function WorkflowPage() {
 
 ## Summary
 
-Workflows in The Collective follow a consistent pattern:
+Workflows in Cinebayan follow a consistent pattern:
 
 1. ✅ **Shared State** - Centralized data management
 2. ✅ **State Tracker** - Visual progress indicators

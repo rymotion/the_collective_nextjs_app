@@ -20,7 +20,7 @@ DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
 DROP FUNCTION IF EXISTS generate_project_code() CASCADE;
 
 -- =====================================================
--- The Collective - Complete Database Schema
+-- Cinebayan - Complete Database Schema
 -- =====================================================
 -- This script creates all tables with the complete schema
 -- combining initial setup and V2 migration enhancements

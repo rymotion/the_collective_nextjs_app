@@ -1,4 +1,4 @@
-# The Collective
+# Cinebayan
 
 A crowdfunding platform for independent filmmakers built with Next.js, React, and Supabase.
 

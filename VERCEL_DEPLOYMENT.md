@@ -1,6 +1,6 @@
 # Vercel Deployment Guide
 
-This guide walks you through deploying The Collective to Vercel.
+This guide walks you through deploying Cinebayan to Vercel.
 
 ## Prerequisites
 

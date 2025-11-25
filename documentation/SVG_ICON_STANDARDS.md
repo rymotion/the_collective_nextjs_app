@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the standardized sizing and usage patterns for all SVG icons across The Collective application.
+This document defines the standardized sizing and usage patterns for all SVG icons across Cinebayan application.
 
 ---
 
@@ -495,4 +495,4 @@ When adding a new SVG icon:
 - ✅ Clear separation between decorative and functional
 - ✅ Responsive stroke weights for readability
 
-**Result**: Professional, accessible, and visually consistent icon system throughout The Collective application!
+**Result**: Professional, accessible, and visually consistent icon system throughout Cinebayan application!

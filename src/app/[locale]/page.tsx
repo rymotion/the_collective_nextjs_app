@@ -74,7 +74,7 @@ export default async function Home({
             title={
               <>
                 Bring creative projects to life with{" "}
-                <span className="text-primary">The Collective</span>
+                <span className="text-primary">Cinebayan</span>
               </>
             }
             subtitle="Discover and fund the next generation of independent films."

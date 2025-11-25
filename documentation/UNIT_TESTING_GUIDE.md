@@ -1,6 +1,6 @@
 # Unit Testing Guide
 
-Complete guide for writing and running unit tests for The Collective application.
+Complete guide for writing and running unit tests for Cinebayan application.
 
 ## Table of Contents
 

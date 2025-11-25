@@ -1,7 +1,7 @@
-# 🚀 Setup Instructions for The Collective
+# 🚀 Setup Instructions for Cinebayan
 
 ## Overview
-This document provides a quick overview of how to get The Collective application running on your local machine.
+This document provides a quick overview of how to get Cinebayan application running on your local machine.
 
 ---
 

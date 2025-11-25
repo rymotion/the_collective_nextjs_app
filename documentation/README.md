@@ -1,6 +1,6 @@
 # Documentation
 
-Welcome to The Collective documentation! This directory contains comprehensive guides for setting up and using the application.
+Welcome to Cinebayan documentation! This directory contains comprehensive guides for setting up and using the application.
 
 ## 📚 Quick Navigation
 
