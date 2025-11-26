@@ -7,9 +7,15 @@ import { PitchesService } from '@/services/pitches.service';
 
 interface PitchActionsProps {
   pitch: any;
+  isEditMode?: boolean;
+  onToggleEdit?: () => void;
 }
 
-export default function PitchActions({ pitch }: PitchActionsProps) {
+export default function PitchActions({
+  pitch,
+  isEditMode = false,
+  onToggleEdit,
+}: PitchActionsProps) {
   const { user } = useSupabaseAuth();
   const router = useRouter();
   const [showShareModal, setShowShareModal] = useState(false);
@@ -17,8 +23,10 @@ export default function PitchActions({ pitch }: PitchActionsProps) {
 
   const isOwner = user?.id === pitch.author_id;
 
-  const handleEdit = () => {
-    router.push(`/pitches/${pitch.id}/edit`);
+  const handleToggleEdit = () => {
+    if (onToggleEdit) {
+      onToggleEdit();
+    }
   };
 
   const handleDelete = async () => {
@@ -62,19 +70,23 @@ export default function PitchActions({ pitch }: PitchActionsProps) {
   return (
     <>
       <div className="flex items-center gap-3">
-        <button onClick={handleEdit} className="btn btn-primary">
-          Edit
-        </button>
+        {onToggleEdit && (
+          <button onClick={handleToggleEdit} className="btn btn-primary">
+            {isEditMode ? 'Cancel Edit' : 'Edit'}
+          </button>
+        )}
         <button onClick={handleShare} className="btn btn-outline">
           Share
         </button>
-        <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className="btn btn-outline text-red-500 hover:bg-red-500/10 disabled:opacity-50"
-        >
-          {deleting ? 'Deleting...' : 'Delete'}
-        </button>
+        {!isEditMode && (
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            className="btn btn-outline text-red-500 hover:bg-red-500/10 disabled:opacity-50"
+          >
+            {deleting ? 'Deleting...' : 'Delete'}
+          </button>
+        )}
       </div>
 
       {showShareModal && (
