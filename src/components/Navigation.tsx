@@ -4,6 +4,7 @@ import { Link, useRouter, usePathname } from "@/i18n/routing";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useTranslations } from "next-intl";
 import { useState, useRef, useEffect } from "react";
+import styles from "./Navigation.module.css";
 
 export default function Navigation() {
   const { isAuthenticated, user, signOut, loading, profile } = useSupabaseAuth();
@@ -117,14 +118,14 @@ export default function Navigation() {
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 focus:outline-none"
                   >
-                    <div className={`rounded-full bg-surface border border-white/10 flex items-center justify-center overflow-hidden transition-all duration-300 ${shouldExpand ? 'w-12 h-12' : 'w-8 h-8'
+                    <div className={`${styles.profileButton} ${shouldExpand ? 'w-12 h-12' : 'w-8 h-8'
                       }`}>
                       {profile?.avatar_url ? (
                         <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`text-muted transition-all duration-300 ${shouldExpand ? 'w-7 h-7' : 'w-5 h-5'
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`${styles.profileIcon} ${shouldExpand ? 'w-7 h-7' : 'w-5 h-5'
                           }`}>
-                          <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                         </svg>
                       )}
                     </div>
@@ -150,8 +151,8 @@ export default function Navigation() {
               <button
                 onClick={handleAuthAction}
                 className={`font-semibold transition-all duration-300 ${isAuthenticated
-                    ? 'text-red-500 hover:text-red-400'
-                    : 'btn btn-primary'
+                  ? 'text-red-500 hover:text-red-400'
+                  : 'btn btn-primary'
                   } ${shouldExpand ? 'text-base py-3 px-6' : 'text-sm py-2 px-4'}`}
               >
                 {isAuthenticated ? 'Logout' : 'Login'}

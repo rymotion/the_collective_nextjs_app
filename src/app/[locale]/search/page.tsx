@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { getProjects, Project } from "@/data/mockData";
 import ProjectCard from "@/components/ProjectCard";
+import Input from "@/components/Input";
+import styles from "./page.module.css";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,29 +47,22 @@ export default function SearchPage() {
         <div className="container-narrow mx-auto mb-12">
           <h1 className="text-h1 mb-8 text-center">Search Projects</h1>
 
-          <div className="flex items-center gap-4 bg-surface border-2 border-white/10 rounded-xl px-6 py-5 shadow-lg focus-within:border-primary focus-within:shadow-primary/20 transition-all">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-5 h-5 text-muted shrink-0"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by title, author, genre, or description..."
+          <div className="max-w-2xl mx-auto">
+            <Input
+              label="Search"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-foreground text-lg placeholder:text-muted focus:outline-none"
-              aria-label="Search projects"
+              onChange={setSearchQuery}
+              placeholder="Search by title, author, genre, or description..."
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+              }
             />
           </div>
         </div>
@@ -91,8 +86,16 @@ export default function SearchPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <p className="text-body text-muted max-w-md mx-auto">
+              <div className={styles.emptyState}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className={styles.emptyStateIcon}
+                >
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+                <p className={styles.emptyStateText}>
                   Try adjusting your search terms or explore different keywords
                 </p>
               </div>

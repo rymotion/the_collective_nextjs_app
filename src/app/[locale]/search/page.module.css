@@ -1,0 +1,11 @@
+.emptyState {
+  @apply text-center py-20;
+}
+
+.emptyStateIcon {
+  @apply w-20 h-20 mx-auto mb-6 text-muted opacity-50;
+}
+
+.emptyStateText {
+  @apply text-body text-muted max-w-md mx-auto;
+}

@@ -1,0 +1,15 @@
+.profileButton {
+  @apply rounded-full bg-surface border border-white/10 flex items-center justify-center overflow-hidden transition-all duration-300;
+}
+
+.profileIcon {
+  @apply text-muted transition-all duration-300;
+}
+
+.authButton {
+  @apply font-semibold transition-all duration-300;
+}
+
+.navLink {
+  @apply font-medium transition-all duration-300;
+}
