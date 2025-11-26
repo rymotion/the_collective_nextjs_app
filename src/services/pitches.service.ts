@@ -12,7 +12,7 @@ export interface PitchData {
 }
 
 export class PitchesService {
-  static async getAllPitches(limit = 20, offset = 0) {
+  static async getAllPitches(limit = 100, offset = 0) {
     try {
       const { data, error, count } = await supabase
         .from("projects")
@@ -27,7 +27,6 @@ export class PitchesService {
         )
         .eq("is_pitch", true)
         .eq("is_published", true)
-        .eq("status", "active")
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
 
@@ -36,7 +35,6 @@ export class PitchesService {
         throw error;
       }
 
-      // Transform the data to match expected structure with proper counts
       const transformedData = (data || []).map((pitch) => ({
         ...pitch,
         work_requests_count: Array.isArray(pitch.work_requests)
@@ -50,7 +48,7 @@ export class PitchesService {
       return transformedData;
     } catch (error) {
       console.error("Error in getAllPitches:", error);
-      throw error;
+      return [];
     }
   }
 
@@ -69,7 +67,6 @@ export class PitchesService {
         )
         .eq("is_pitch", true)
         .eq("is_published", true)
-        .eq("status", "active")
         .order("raised", { ascending: false })
         .limit(limit);
 
@@ -90,6 +87,28 @@ export class PitchesService {
     }
   }
 
+  // Get all available genres from published pitches
+  static async getAvailableGenres() {
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('genre')
+        .eq('is_pitch', true)
+        .eq('is_published', true);
+
+      if (error) throw error;
+
+      const uniqueGenres = Array.from(
+        new Set((data || []).map((p) => p.genre).filter(Boolean))
+      ).sort();
+
+      return uniqueGenres;
+    } catch (error) {
+      console.error('Error fetching available genres:', error);
+      return [];
+    }
+  }
+
   // Get pitches by genre
   static async getPitchesByGenre(genre: string, limit = 10) {
     try {
@@ -105,7 +124,6 @@ export class PitchesService {
         )
         .eq("is_pitch", true)
         .eq("is_published", true)
-        .eq("status", "active")
         .eq("genre", genre)
         .order("created_at", { ascending: false })
         .limit(limit);

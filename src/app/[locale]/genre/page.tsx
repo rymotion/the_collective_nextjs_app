@@ -2,29 +2,36 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { getProjects, Project } from "@/data/mockData";
-import ProjectCard from "@/components/ProjectCard";
+import { PitchesService } from "@/services/pitches.service";
+import PitchCard from "@/components/pitch/PitchCard";
 import styles from "./page.module.css";
 
 export default function GenrePage() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
   const [genres, setGenres] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslations("GenrePage");
 
   useEffect(() => {
-    const loadProjects = async () => {
-      const { data } = await getProjects(1, 100);
-      setProjects(data);
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [availableGenres, allPitches] = await Promise.all([
+          PitchesService.getAvailableGenres(),
+          PitchesService.getAllPitches(100),
+        ]);
 
-      const uniqueGenres = Array.from(
-        new Set(data.map((p) => p.genre))
-      ).sort();
-      setGenres(["All", ...uniqueGenres]);
-      setLoading(false);
+        setGenres(["All", ...availableGenres]);
+        setProjects(allPitches);
+      } catch (error) {
+        console.error("Error loading genre data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-    loadProjects();
+
+    loadData();
   }, []);
 
   const filteredProjects =
@@ -75,9 +82,9 @@ export default function GenrePage() {
             </div>
 
             {filteredProjects.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                 {filteredProjects.map((project) => (
-                  <ProjectCard key={project.id} {...project} />
+                  <PitchCard key={project.id} pitch={project} />
                 ))}
               </div>
             ) : (
