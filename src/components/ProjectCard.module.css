@@ -1,0 +1,5 @@
+.card {
+  @apply flex flex-col h-full bg-surface rounded-xl border-[3px] border-white/10 overflow-hidden transition-all duration-200;
+  @apply hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 hover:hue-rotate-15;
+  @apply active:scale-95 active:translate-y-0 active:shadow-none;
+}

@@ -80,35 +80,31 @@ export default function Navigation() {
       <div className={`container ${navHeight} flex items-center justify-between transition-all duration-300`}>
         <Link
           href="/"
-          className={`font-bold tracking-tighter transition-all duration-300 ${
-            shouldExpand ? 'text-4xl' : 'text-2xl'
-          }`}
+          className={`font-bold tracking-tighter transition-all duration-300 ${shouldExpand ? 'text-4xl' : 'text-2xl'
+            }`}
         >
-          THE <span className="text-primary">COLLECTIVE</span>
+          <span className="text-primary">CineBayan</span>
         </Link>
 
         <div className={`flex items-center transition-all duration-300 ${shouldExpand ? 'gap-8' : 'gap-6'}`}>
           <Link
             href="/"
-            className={`font-medium transition-all duration-300 ${
-              shouldExpand ? 'text-base' : 'text-sm'
-            } ${isActive('/') ? 'text-primary' : 'hover:text-primary'}`}
+            className={`font-medium transition-all duration-300 ${shouldExpand ? 'text-base' : 'text-sm'
+              } ${isActive('/') ? 'text-primary' : 'hover:text-primary'}`}
           >
             {t('discover')}
           </Link>
           <Link
             href="/search"
-            className={`font-medium transition-all duration-300 ${
-              shouldExpand ? 'text-base' : 'text-sm'
-            } ${isActive('/search') ? 'text-primary' : 'hover:text-primary'}`}
+            className={`font-medium transition-all duration-300 ${shouldExpand ? 'text-base' : 'text-sm'
+              } ${isActive('/search') ? 'text-primary' : 'hover:text-primary'}`}
           >
             {t('search')}
           </Link>
           <Link
             href="/genre"
-            className={`font-medium transition-all duration-300 ${
-              shouldExpand ? 'text-base' : 'text-sm'
-            } ${isActive('/genre') ? 'text-primary' : 'hover:text-primary'}`}
+            className={`font-medium transition-all duration-300 ${shouldExpand ? 'text-base' : 'text-sm'
+              } ${isActive('/genre') ? 'text-primary' : 'hover:text-primary'}`}
           >
             {t('genre')}
           </Link>
@@ -121,15 +117,13 @@ export default function Navigation() {
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 focus:outline-none"
                   >
-                    <div className={`rounded-full bg-surface border border-white/10 flex items-center justify-center overflow-hidden transition-all duration-300 ${
-                      shouldExpand ? 'w-12 h-12' : 'w-8 h-8'
-                    }`}>
+                    <div className={`rounded-full bg-surface border border-white/10 flex items-center justify-center overflow-hidden transition-all duration-300 ${shouldExpand ? 'w-12 h-12' : 'w-8 h-8'
+                      }`}>
                       {profile?.avatar_url ? (
                         <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`text-muted transition-all duration-300 ${
-                          shouldExpand ? 'w-7 h-7' : 'w-5 h-5'
-                        }`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`text-muted transition-all duration-300 ${shouldExpand ? 'w-7 h-7' : 'w-5 h-5'
+                          }`}>
                           <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -155,11 +149,10 @@ export default function Navigation() {
 
               <button
                 onClick={handleAuthAction}
-                className={`font-semibold transition-all duration-300 ${
-                  isAuthenticated
+                className={`font-semibold transition-all duration-300 ${isAuthenticated
                     ? 'text-red-500 hover:text-red-400'
                     : 'btn btn-primary'
-                } ${shouldExpand ? 'text-base py-3 px-6' : 'text-sm py-2 px-4'}`}
+                  } ${shouldExpand ? 'text-base py-3 px-6' : 'text-sm py-2 px-4'}`}
               >
                 {isAuthenticated ? 'Logout' : 'Login'}
               </button>

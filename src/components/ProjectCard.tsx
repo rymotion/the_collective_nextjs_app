@@ -17,6 +17,8 @@ interface ProjectCardProps {
   pitchStatus?: string;
 }
 
+import styles from "./ProjectCard.module.css";
+
 export default function ProjectCard({
   id,
   title,
@@ -34,13 +36,13 @@ export default function ProjectCard({
   const progress = Math.min((raised / goal) * 100, 100);
   const daysLeft = deadline
     ? Math.ceil(
-        (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      )
+      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    )
     : null;
 
   return (
     <Link href={`/pitches/${id}`} className="group block">
-      <article className="flex flex-col h-full bg-surface rounded-xl border border-white/10 overflow-hidden transition-all hover:border-primary/50 hover:shadow-xl hover:-translate-y-1">
+      <article className={styles.card}>
         {/* Project Image */}
         <div className="relative aspect-[4/3] overflow-hidden">
           {imageUrl ? (
