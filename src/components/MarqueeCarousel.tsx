@@ -3,7 +3,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useRouter } from "@/i18n/routing";
-import { Project } from "@/data/mockData";
+// Project type for carousel - matches Supabase projects table structure
+interface Project {
+  id: string;
+  title: string;
+  author?: { display_name: string | null; avatar_url: string | null } | string;
+  image_url?: string | null;
+  imageUrl?: string; // Legacy support
+  raised: number;
+  goal: number;
+  genre: string;
+  synopsis?: string;
+}
 
 interface MarqueeCarouselProps {
   projects: Project[];

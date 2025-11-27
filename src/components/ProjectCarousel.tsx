@@ -2,7 +2,18 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Project } from "@/data/mockData";
+// Project type for carousel - matches Supabase projects table structure
+interface Project {
+  id: string;
+  title: string;
+  author?: { display_name: string | null; avatar_url: string | null } | string;
+  image_url?: string | null;
+  imageUrl?: string; // Legacy support
+  raised: number;
+  goal: number;
+  genre: string;
+  synopsis?: string;
+}
 import ProjectCard from "./ProjectCard";
 
 interface ProjectCarouselProps {
@@ -66,7 +77,28 @@ export default function ProjectCarousel({
                 key={project.id}
                 className="flex-none w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]"
               >
-                <ProjectCard {...project} />
+                <ProjectCard
+                  id={project.id}
+                  title={project.title}
+                  author={
+                    typeof project.author === "string"
+                      ? project.author
+                      : project.author?.display_name || "Anonymous"
+                  }
+                  imageUrl={project.image_url || project.imageUrl || ""}
+                  raised={
+                    typeof project.raised === "string"
+                      ? parseFloat(project.raised as unknown as string)
+                      : project.raised
+                  }
+                  goal={
+                    typeof project.goal === "string"
+                      ? parseFloat(project.goal as unknown as string)
+                      : project.goal
+                  }
+                  genre={project.genre}
+                  synopsis={project.synopsis || ""}
+                />
               </div>
             ))}
           </div>

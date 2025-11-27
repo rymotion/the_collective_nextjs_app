@@ -14,14 +14,13 @@ export interface PitchData {
 export class PitchesService {
   static async getAllPitches(limit = 100, offset = 0) {
     try {
+      // First try with related tables (work_requests, comments)
       const { data, error, count } = await supabase
         .from("projects")
         .select(
           `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          work_requests(count),
-          comments(count)
+          author:profiles!author_id(display_name, avatar_url)
         `,
           { count: "exact" }
         )
@@ -37,12 +36,8 @@ export class PitchesService {
 
       const transformedData = (data || []).map((pitch) => ({
         ...pitch,
-        work_requests_count: Array.isArray(pitch.work_requests)
-          ? pitch.work_requests.length
-          : 0,
-        comments_count: Array.isArray(pitch.comments)
-          ? pitch.comments.length
-          : 0,
+        work_requests_count: 0,
+        comments_count: 0,
       }));
 
       return transformedData;
@@ -60,9 +55,7 @@ export class PitchesService {
         .select(
           `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          work_requests(count),
-          comments(count)
+          author:profiles!author_id(display_name, avatar_url)
         `
         )
         .eq("is_pitch", true)
@@ -74,12 +67,8 @@ export class PitchesService {
 
       return (data || []).map((pitch) => ({
         ...pitch,
-        work_requests_count: Array.isArray(pitch.work_requests)
-          ? pitch.work_requests.length
-          : 0,
-        comments_count: Array.isArray(pitch.comments)
-          ? pitch.comments.length
-          : 0,
+        work_requests_count: 0,
+        comments_count: 0,
       }));
     } catch (error) {
       console.error("Error fetching featured pitches:", error);
@@ -91,10 +80,10 @@ export class PitchesService {
   static async getAvailableGenres() {
     try {
       const { data, error } = await supabase
-        .from('projects')
-        .select('genre')
-        .eq('is_pitch', true)
-        .eq('is_published', true);
+        .from("projects")
+        .select("genre")
+        .eq("is_pitch", true)
+        .eq("is_published", true);
 
       if (error) throw error;
 
@@ -104,7 +93,7 @@ export class PitchesService {
 
       return uniqueGenres;
     } catch (error) {
-      console.error('Error fetching available genres:', error);
+      console.error("Error fetching available genres:", error);
       return [];
     }
   }
@@ -117,9 +106,7 @@ export class PitchesService {
         .select(
           `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          work_requests(count),
-          comments(count)
+          author:profiles!author_id(display_name, avatar_url)
         `
         )
         .eq("is_pitch", true)
@@ -132,12 +119,8 @@ export class PitchesService {
 
       return (data || []).map((pitch) => ({
         ...pitch,
-        work_requests_count: Array.isArray(pitch.work_requests)
-          ? pitch.work_requests.length
-          : 0,
-        comments_count: Array.isArray(pitch.comments)
-          ? pitch.comments.length
-          : 0,
+        work_requests_count: 0,
+        comments_count: 0,
       }));
     } catch (error) {
       console.error("Error fetching pitches by genre:", error);
@@ -151,20 +134,7 @@ export class PitchesService {
       .select(
         `
         *,
-        author:profiles!author_id(display_name, avatar_url, id),
-        work_requests(
-          id,
-          role_type,
-          role_description,
-          user_id,
-          status,
-          created_at,
-          experience_years,
-          availability,
-          message,
-          applicant:profiles!user_id(display_name, avatar_url, id)
-        ),
-        comments(count)
+        author:profiles!author_id(display_name, avatar_url, id)
       `
       )
       .eq("id", pitchId)
@@ -185,23 +155,7 @@ export class PitchesService {
         author:profiles!author_id(
           display_name,
           avatar_url
-        ),
-        cast_crew:cast_crew(
-          id,
-          type,
-          name,
-          role,
-          image_url
-        ),
-        project_updates:project_updates(
-          id,
-          title,
-          body,
-          created_at,
-          updated_at,
-          is_published
-        ),
-        comments(count)
+        )
       `
       )
       .eq("id", pitchId)
@@ -320,13 +274,7 @@ export class PitchesService {
   static async getUserPitches(userId: string) {
     const { data, error } = await supabase
       .from("projects")
-      .select(
-        `
-        *,
-        work_requests(count),
-        comments(count)
-      `
-      )
+      .select(`*`)
       .eq("author_id", userId)
       .eq("is_pitch", true)
       .order("created_at", { ascending: false });

@@ -1,11 +1,11 @@
-import { supabase } from '@/lib/supabase';
-import type { Database } from '@/lib/supabase';
+import { supabase } from "@/lib/supabase";
+import type { Database } from "@/lib/supabase";
 
-type Project = Database['public']['Tables']['projects']['Row'];
-type ProjectInsert = Database['public']['Tables']['projects']['Insert'];
-type ProjectUpdate = Database['public']['Tables']['projects']['Update'];
-type CastCrew = Database['public']['Tables']['cast_crew']['Row'];
-type Accolade = Database['public']['Tables']['accolades']['Row'];
+type Project = Database["public"]["Tables"]["projects"]["Row"];
+type ProjectInsert = Database["public"]["Tables"]["projects"]["Insert"];
+type ProjectUpdate = Database["public"]["Tables"]["projects"]["Update"];
+type CastCrew = Database["public"]["Tables"]["cast_crew"]["Row"];
+type Accolade = Database["public"]["Tables"]["accolades"]["Row"];
 
 export interface ProjectWithDetails extends Project {
   author?: {
@@ -27,68 +27,112 @@ export class ProjectsService {
   ): Promise<{ projects: ProjectWithDetails[]; total: number }> {
     try {
       let query = supabase
-        .from('projects')
-        .select(`
+        .from("projects")
+        .select(
+          `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          cast_crew(*),
-          accolades(*)
-        `, { count: 'exact' })
+          author:profiles!author_id(display_name, avatar_url)
+        `,
+          { count: "exact" }
+        )
         .range(offset, offset + limit - 1)
-        .order('created_at', { ascending: false });
+        .order("created_at", { ascending: false });
 
       if (genre) {
-        query = query.eq('genre', genre);
+        query = query.eq("genre", genre);
       }
 
       if (status) {
-        query = query.eq('status', status);
+        query = query.eq("status", status);
       }
 
       const { data, error, count } = await query;
 
       if (error) throw error;
 
-      const projects: ProjectWithDetails[] = (data || []).map((project: any) => ({
-        ...project,
-        cast: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'cast'),
-        crew: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'crew'),
-      }));
+      const projects: ProjectWithDetails[] = (data || []).map(
+        (project: any) => ({
+          ...project,
+          cast: [],
+          crew: [],
+        })
+      );
 
       return { projects, total: count || 0 };
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error("Error fetching projects:", error);
       throw error;
     }
   }
 
-  static async getProject(projectId: string): Promise<ProjectWithDetails | null> {
+  static async getProject(
+    projectId: string
+  ): Promise<ProjectWithDetails | null> {
+    console.log(
+      "[ProjectsService.getProject] Starting fetch for projectId:",
+      projectId
+    );
+
     try {
+      console.log(
+        "[ProjectsService.getProject] Querying Supabase projects table..."
+      );
+
       const { data, error } = await supabase
-        .from('projects')
-        .select(`
+        .from("projects")
+        .select(
+          `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          cast_crew(*),
-          accolades(*),
-          contributions(count)
-        `)
-        .eq('id', projectId)
+          author:profiles!author_id(display_name, avatar_url)
+        `
+        )
+        .eq("id", projectId)
         .maybeSingle();
 
-      if (error) throw error;
-      if (!data) return null;
+      if (error) {
+        console.error("[ProjectsService.getProject] Supabase error:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        throw error;
+      }
+
+      if (!data) {
+        console.warn(
+          "[ProjectsService.getProject] No project found with id:",
+          projectId
+        );
+        return null;
+      }
+
+      console.log("[ProjectsService.getProject] Raw data received:", {
+        id: data.id,
+        title: data.title,
+        author_id: data.author_id,
+        is_pitch: data.is_pitch,
+        is_published: data.is_published,
+      });
 
       const project: ProjectWithDetails = {
         ...data,
-        cast: data.cast_crew?.filter((cc: CastCrew) => cc.type === 'cast'),
-        crew: data.cast_crew?.filter((cc: CastCrew) => cc.type === 'crew'),
-        contributions_count: data.contributions?.[0]?.count || 0,
+        cast: [],
+        crew: [],
+        contributions_count: 0,
       };
+
+      console.log("[ProjectsService.getProject] Transformed project:", {
+        id: project.id,
+        title: project.title,
+      });
 
       return project;
     } catch (error) {
-      console.error('Error fetching project:', error);
+      console.error(
+        "[ProjectsService.getProject] Error fetching project:",
+        error
+      );
       throw error;
     }
   }
@@ -96,7 +140,7 @@ export class ProjectsService {
   static async createProject(project: ProjectInsert): Promise<Project> {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from("projects")
         .insert(project)
         .select()
         .single();
@@ -104,24 +148,27 @@ export class ProjectsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating project:', error);
+      console.error("Error creating project:", error);
       throw error;
     }
   }
 
-  static async updateProject(projectId: string, updates: ProjectUpdate): Promise<Project> {
+  static async updateProject(
+    projectId: string,
+    updates: ProjectUpdate
+  ): Promise<Project> {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from("projects")
         .update(updates)
-        .eq('id', projectId)
+        .eq("id", projectId)
         .select()
         .single();
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating project:', error);
+      console.error("Error updating project:", error);
       throw error;
     }
   }
@@ -129,13 +176,13 @@ export class ProjectsService {
   static async deleteProject(projectId: string): Promise<void> {
     try {
       const { error } = await supabase
-        .from('projects')
+        .from("projects")
         .delete()
-        .eq('id', projectId);
+        .eq("id", projectId);
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting project:', error);
+      console.error("Error deleting project:", error);
       throw error;
     }
   }
@@ -143,55 +190,63 @@ export class ProjectsService {
   static async searchProjects(query: string): Promise<ProjectWithDetails[]> {
     try {
       const { data, error } = await supabase
-        .from('projects')
-        .select(`
+        .from("projects")
+        .select(
+          `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          cast_crew(*),
-          accolades(*)
-        `)
-        .or(`title.ilike.%${query}%,synopsis.ilike.%${query}%,genre.ilike.%${query}%`)
-        .order('created_at', { ascending: false });
+          author:profiles!author_id(display_name, avatar_url)
+        `
+        )
+        .or(
+          `title.ilike.%${query}%,synopsis.ilike.%${query}%,genre.ilike.%${query}%`
+        )
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      const projects: ProjectWithDetails[] = (data || []).map((project: any) => ({
-        ...project,
-        cast: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'cast'),
-        crew: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'crew'),
-      }));
+      const projects: ProjectWithDetails[] = (data || []).map(
+        (project: any) => ({
+          ...project,
+          cast: [],
+          crew: [],
+        })
+      );
 
       return projects;
     } catch (error) {
-      console.error('Error searching projects:', error);
+      console.error("Error searching projects:", error);
       throw error;
     }
   }
 
-  static async getProjectsByAuthor(authorId: string): Promise<ProjectWithDetails[]> {
+  static async getProjectsByAuthor(
+    authorId: string
+  ): Promise<ProjectWithDetails[]> {
     try {
       const { data, error } = await supabase
-        .from('projects')
-        .select(`
+        .from("projects")
+        .select(
+          `
           *,
-          author:profiles!author_id(display_name, avatar_url),
-          cast_crew(*),
-          accolades(*)
-        `)
-        .eq('author_id', authorId)
-        .order('created_at', { ascending: false });
+          author:profiles!author_id(display_name, avatar_url)
+        `
+        )
+        .eq("author_id", authorId)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      const projects: ProjectWithDetails[] = (data || []).map((project: any) => ({
-        ...project,
-        cast: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'cast'),
-        crew: project.cast_crew?.filter((cc: CastCrew) => cc.type === 'crew'),
-      }));
+      const projects: ProjectWithDetails[] = (data || []).map(
+        (project: any) => ({
+          ...project,
+          cast: [],
+          crew: [],
+        })
+      );
 
       return projects;
     } catch (error) {
-      console.error('Error fetching projects by author:', error);
+      console.error("Error fetching projects by author:", error);
       throw error;
     }
   }

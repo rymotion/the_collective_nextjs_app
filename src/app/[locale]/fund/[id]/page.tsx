@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
-import { getProject } from "@/data/mockData";
+import { ProjectsService } from "@/services/projects.service";
 
 interface PageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -12,9 +12,9 @@ interface PageProps {
 interface Project {
   id: string;
   title: string;
-  author: string;
+  author: string | { display_name: string | null; avatar_url: string | null };
   synopsis: string;
-  imageUrl: string;
+  image_url: string | null;
   goal: number;
   raised: number;
   genre: string;
@@ -43,13 +43,34 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
 
   useEffect(() => {
     if (params?.id) {
-      getProject(params.id).then((data) => {
-        if (data) {
-          setProject(data);
-        } else {
+      console.log("[FundProjectPage] Fetching project with ID:", params.id);
+
+      ProjectsService.getProject(params.id)
+        .then((data) => {
+          console.log(
+            "[FundProjectPage] Project data received:",
+            data ? "Found" : "Not found"
+          );
+          if (data) {
+            console.log("[FundProjectPage] Project details:", {
+              id: data.id,
+              title: data.title,
+              genre: data.genre,
+              goal: data.goal,
+              raised: data.raised,
+            });
+            setProject(data as unknown as Project);
+          } else {
+            console.warn(
+              "[FundProjectPage] Project not found, redirecting to home"
+            );
+            router.push(`/${params.locale}`);
+          }
+        })
+        .catch((error) => {
+          console.error("[FundProjectPage] Error fetching project:", error);
           router.push(`/${params.locale}`);
-        }
-      });
+        });
     }
   }, [params, router]);
 
@@ -288,7 +309,7 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
 
               <div className="aspect-[2/3] rounded-lg overflow-hidden mb-4">
                 <img
-                  src={project.imageUrl}
+                  src={project.image_url || "/placeholder-poster.jpg"}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />

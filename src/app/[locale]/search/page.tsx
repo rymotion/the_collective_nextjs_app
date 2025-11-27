@@ -2,24 +2,36 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { getProjects, Project } from "@/data/mockData";
+import {
+  ProjectsService,
+  ProjectWithDetails,
+} from "@/services/projects.service";
 import ProjectCard from "@/components/ProjectCard";
 import Input from "@/components/Input";
 import styles from "./page.module.css";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectWithDetails[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<
+    ProjectWithDetails[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslations("SearchPage");
 
   useEffect(() => {
     const loadProjects = async () => {
-      const { data } = await getProjects(1, 100);
-      setProjects(data);
-      setFilteredProjects(data);
-      setLoading(false);
+      console.log("[SearchPage] Loading projects from Supabase...");
+      try {
+        const { projects: data } = await ProjectsService.getAllProjects(100);
+        console.log("[SearchPage] Loaded", data.length, "projects");
+        setProjects(data);
+        setFilteredProjects(data);
+      } catch (error) {
+        console.error("[SearchPage] Error loading projects:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     loadProjects();
   }, []);
@@ -31,13 +43,18 @@ export default function SearchPage() {
     }
 
     const query = searchQuery.toLowerCase();
-    const filtered = projects.filter(
-      (project) =>
-        project.title.toLowerCase().includes(query) ||
-        project.author.toLowerCase().includes(query) ||
-        project.genre.toLowerCase().includes(query) ||
-        project.synopsis.toLowerCase().includes(query)
-    );
+    const filtered = projects.filter((project) => {
+      const authorName =
+        typeof project.author === "string"
+          ? project.author
+          : project.author?.display_name || "";
+      return (
+        project.title?.toLowerCase().includes(query) ||
+        authorName.toLowerCase().includes(query) ||
+        project.genre?.toLowerCase().includes(query) ||
+        project.synopsis?.toLowerCase().includes(query)
+      );
+    });
     setFilteredProjects(filtered);
   }, [searchQuery, projects]);
 
@@ -75,14 +92,37 @@ export default function SearchPage() {
           <>
             <div className="mb-10">
               <p className="text-lg text-muted text-center font-medium">
-                {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""} found
+                {filteredProjects.length} project
+                {filteredProjects.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
             {filteredProjects.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
                 {filteredProjects.map((project) => (
-                  <ProjectCard key={project.id} {...project} />
+                  <ProjectCard
+                    key={project.id}
+                    id={project.id}
+                    title={project.title}
+                    author={
+                      typeof project.author === "string"
+                        ? project.author
+                        : project.author?.display_name || "Anonymous"
+                    }
+                    imageUrl={project.image_url || ""}
+                    raised={
+                      typeof project.raised === "string"
+                        ? parseFloat(project.raised)
+                        : project.raised
+                    }
+                    goal={
+                      typeof project.goal === "string"
+                        ? parseFloat(project.goal)
+                        : project.goal
+                    }
+                    genre={project.genre}
+                    synopsis={project.synopsis || ""}
+                  />
                 ))}
               </div>
             ) : (
