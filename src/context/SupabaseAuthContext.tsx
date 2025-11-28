@@ -15,6 +15,8 @@ interface SupabaseAuthContextType {
   profile: Profile | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isVerified: boolean; // Alias for isAuthenticated - user is logged in
+  isUnverified: boolean; // User is not logged in
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, displayName?: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -143,12 +145,16 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     }
   };
 
+  const isAuthenticated = !!user;
+
   const value = {
     user,
     session,
     profile,
     loading,
-    isAuthenticated: !!user,
+    isAuthenticated,
+    isVerified: isAuthenticated, // Verified = logged in user
+    isUnverified: !isAuthenticated, // Unverified = not logged in
     signIn,
     signUp,
     signOut,

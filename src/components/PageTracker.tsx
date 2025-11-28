@@ -31,10 +31,13 @@ export default function PageTracker() {
 
             // Handle dynamic routes
             if (pathWithoutLocale.startsWith("/fund/")) {
-                return "Fund Project";
+                return "Fund Pitch";
+            }
+            if (pathWithoutLocale.startsWith("/pitches/")) {
+                return "Pitch Details";
             }
             if (pathWithoutLocale.startsWith("/projects/")) {
-                return "Project Details";
+                return "Pitch Details"; // Legacy route support
             }
             if (pathWithoutLocale.startsWith("/pitch/")) {
                 return "Pitch Details";

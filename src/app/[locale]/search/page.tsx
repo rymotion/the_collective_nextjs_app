@@ -6,63 +6,63 @@ import {
   ProjectsService,
   ProjectWithDetails,
 } from "@/services/projects.service";
-import ProjectCard from "@/components/ProjectCard";
+import PitchCard from "@/components/pitch/PitchCard";
 import Input from "@/components/Input";
 import styles from "./page.module.css";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [projects, setProjects] = useState<ProjectWithDetails[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<
+  const [pitches, setPitches] = useState<ProjectWithDetails[]>([]);
+  const [filteredPitches, setFilteredPitches] = useState<
     ProjectWithDetails[]
   >([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslations("SearchPage");
 
   useEffect(() => {
-    const loadProjects = async () => {
-      console.log("[SearchPage] Loading projects from Supabase...");
+    const loadPitches = async () => {
+      console.log("[SearchPage] Loading pitches from Supabase...");
       try {
         const { projects: data } = await ProjectsService.getAllProjects(100);
-        console.log("[SearchPage] Loaded", data.length, "projects");
-        setProjects(data);
-        setFilteredProjects(data);
+        console.log("[SearchPage] Loaded", data.length, "pitches");
+        setPitches(data);
+        setFilteredPitches(data);
       } catch (error) {
-        console.error("[SearchPage] Error loading projects:", error);
+        console.error("[SearchPage] Error loading pitches:", error);
       } finally {
         setLoading(false);
       }
     };
-    loadProjects();
+    loadPitches();
   }, []);
 
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setFilteredProjects(projects);
+      setFilteredPitches(pitches);
       return;
     }
 
     const query = searchQuery.toLowerCase();
-    const filtered = projects.filter((project) => {
+    const filtered = pitches.filter((pitch) => {
       const authorName =
-        typeof project.author === "string"
-          ? project.author
-          : project.author?.display_name || "";
+        typeof pitch.author === "string"
+          ? pitch.author
+          : pitch.author?.display_name || "";
       return (
-        project.title?.toLowerCase().includes(query) ||
+        pitch.title?.toLowerCase().includes(query) ||
         authorName.toLowerCase().includes(query) ||
-        project.genre?.toLowerCase().includes(query) ||
-        project.synopsis?.toLowerCase().includes(query)
+        pitch.genre?.toLowerCase().includes(query) ||
+        pitch.synopsis?.toLowerCase().includes(query)
       );
     });
-    setFilteredProjects(filtered);
-  }, [searchQuery, projects]);
+    setFilteredPitches(filtered);
+  }, [searchQuery, pitches]);
 
   return (
     <div className="w-full page-content">
       <div className="container">
         <div className="container-narrow mx-auto mb-12">
-          <h1 className="text-h1 mb-8 text-center">Search Projects</h1>
+          <h1 className="text-h1 mb-8 text-center">Search Pitches</h1>
 
           <div className="max-w-2xl mx-auto">
             <Input
@@ -92,37 +92,15 @@ export default function SearchPage() {
           <>
             <div className="mb-10">
               <p className="text-lg text-muted text-center font-medium">
-                {filteredProjects.length} project
-                {filteredProjects.length !== 1 ? "s" : ""} found
+                {filteredPitches.length} pitch
+                {filteredPitches.length !== 1 ? "es" : ""} found
               </p>
             </div>
 
-            {filteredProjects.length > 0 ? (
+            {filteredPitches.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
-                {filteredProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    id={project.id}
-                    title={project.title}
-                    author={
-                      typeof project.author === "string"
-                        ? project.author
-                        : project.author?.display_name || "Anonymous"
-                    }
-                    imageUrl={project.image_url || ""}
-                    raised={
-                      typeof project.raised === "string"
-                        ? parseFloat(project.raised)
-                        : project.raised
-                    }
-                    goal={
-                      typeof project.goal === "string"
-                        ? parseFloat(project.goal)
-                        : project.goal
-                    }
-                    genre={project.genre}
-                    synopsis={project.synopsis || ""}
-                  />
+                {filteredPitches.map((pitch) => (
+                  <PitchCard key={pitch.id} pitch={pitch} />
                 ))}
               </div>
             ) : (

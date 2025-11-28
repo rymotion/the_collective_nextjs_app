@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { PageLayout, Section, Grid, Hero } from "@/components/layouts";
 import CategoryFilter from "@/components/CategoryFilter";
-import ProjectCard from "@/components/ProjectCard";
+import PitchCard from "@/components/pitch/PitchCard";
 import MarqueeCarousel from "@/components/MarqueeCarousel";
 import EmptyProjectsState from "@/components/EmptyProjectsState";
 import { PitchesService } from "@/services/pitches.service";
@@ -25,18 +25,18 @@ export default async function Home({
   const t = await getTranslations("HomePage");
 
   // Load data from Supabase
-  let projects = [];
-  let featuredProjects = [];
+  let pitches = [];
+  let featuredPitches = [];
   let error = null;
 
   try {
     // Load all published pitches
-    projects = await PitchesService.getAllPitches(20);
+    pitches = await PitchesService.getAllPitches(20);
 
     // Load featured pitches for carousel/hero section
-    featuredProjects = await PitchesService.getFeaturedPitches(10);
+    featuredPitches = await PitchesService.getFeaturedPitches(10);
   } catch (err) {
-    console.error("Error loading projects:", err);
+    console.error("Error loading pitches:", err);
     error = err;
   }
 
@@ -61,7 +61,7 @@ export default async function Home({
   }
 
   // Handle empty state
-  if (!projects || projects.length === 0) {
+  if (!pitches || pitches.length === 0) {
     return <EmptyProjectsState locale={locale} />;
   }
 
@@ -90,7 +90,7 @@ export default async function Home({
                   href="/pitches"
                   className="btn btn-outline text-lg px-8 py-4 ml-4"
                 >
-                  Browse Projects
+                  Browse Pitches
                 </Link>
               </>
             }
@@ -105,12 +105,12 @@ export default async function Home({
         </div>
       </Section>
 
-      {/* Featured Projects Carousel */}
-      {featuredProjects.length > 0 && (
+      {/* Featured Pitches Carousel */}
+      {featuredPitches.length > 0 && (
         <Section spacing="md">
           <div className="container mb-8">
             <div className="flex justify-between items-center">
-              <h2 className="text-4xl font-bold">Featured Projects</h2>
+              <h2 className="text-4xl font-bold">Featured Pitches</h2>
               <Link
                 href="/pitches"
                 className="text-primary hover:text-white transition-colors"
@@ -119,53 +119,31 @@ export default async function Home({
               </Link>
             </div>
           </div>
-          <MarqueeCarousel projects={featuredProjects} />
+          <MarqueeCarousel projects={featuredPitches} />
         </Section>
       )}
 
-      {/* All Projects Grid */}
+      {/* All Pitches Grid */}
       <Section spacing="lg">
         <div className="container">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold">All Projects</h2>
+            <h2 className="text-3xl font-bold">All Pitches</h2>
             <p className="text-muted">
-              {projects.length} {projects.length === 1 ? "project" : "projects"}{" "}
+              {pitches.length} {pitches.length === 1 ? "pitch" : "pitches"}{" "}
               available
             </p>
           </div>
 
           <Grid columns={4} gap="lg">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.title}
-                author={project.author?.display_name || "Anonymous"}
-                imageUrl={project.image_url || ""}
-                raised={
-                  typeof project.raised === "string"
-                    ? parseFloat(project.raised)
-                    : project.raised
-                }
-                goal={
-                  typeof project.goal === "string"
-                    ? parseFloat(project.goal)
-                    : project.goal
-                }
-                genre={project.genre}
-                deadline={project.deadline}
-                synopsis={project.synopsis}
-                workRequestsCount={project.work_requests_count}
-                commentsCount={project.comments_count}
-                pitchStatus={project.pitch_status}
-              />
+            {pitches.map((pitch) => (
+              <PitchCard key={pitch.id} pitch={pitch} />
             ))}
           </Grid>
 
           {/* Load More Button */}
-          {projects.length >= 20 && (
+          {pitches.length >= 20 && (
             <div className="text-center mt-12">
-              <button className="btn btn-outline">Load More Projects</button>
+              <button className="btn btn-outline">Load More Pitches</button>
             </div>
           )}
         </div>

@@ -21,7 +21,7 @@ export default function CommentItem({
   onReplyAdded,
   onUpdate,
 }: CommentItemProps) {
-  const { user, isAuthenticated } = useSupabaseAuth();
+  const { user, isVerified } = useSupabaseAuth();
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
@@ -125,7 +125,7 @@ export default function CommentItem({
               </p>
 
               <div className="flex items-center gap-4 mt-3">
-                {isAuthenticated && level < 5 && (
+                {isVerified && level < 5 && (
                   <button
                     onClick={() => setShowReplyForm(!showReplyForm)}
                     className="text-xs text-muted hover:text-primary transition-colors"
