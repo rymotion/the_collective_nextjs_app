@@ -95,20 +95,6 @@ export default function Navigation() {
           >
             {t('discover')}
           </Link>
-          <Link
-            href="/search"
-            className={`font-medium transition-all duration-300 ${shouldExpand ? 'text-base' : 'text-sm'
-              } ${isActive('/search') ? 'text-primary' : 'hover:text-primary'}`}
-          >
-            {t('search')}
-          </Link>
-          <Link
-            href="/genre"
-            className={`font-medium transition-all duration-300 ${shouldExpand ? 'text-base' : 'text-sm'
-              } ${isActive('/genre') ? 'text-primary' : 'hover:text-primary'}`}
-          >
-            {t('genre')}
-          </Link>
 
           {!loading && (
             <div className="flex items-center gap-4">
