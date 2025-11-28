@@ -3,6 +3,7 @@
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Dashboard() {
   const { isAuthenticated, user, profile, loading, updateProfile } = useSupabaseAuth();
@@ -85,7 +86,7 @@ export default function Dashboard() {
         {/* IMDb Integration */}
         <section className="glass-panel p-6">
           <h2 className="text-h3 mb-6">IMDb Integration</h2>
-          
+
           {profile?.imdb_synced ? (
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-4 bg-surface/50 rounded-lg border border-primary/20">
@@ -97,7 +98,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleRemoveImdb}
                 disabled={isSaving}
@@ -123,7 +124,7 @@ export default function Dashboard() {
                   {error}
                 </div>
               )}
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">
                   IMDb Profile URL
@@ -136,7 +137,7 @@ export default function Dashboard() {
                   className="w-full px-3 py-2 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors text-sm"
                 />
               </div>
-              
+
               <button
                 onClick={handleSaveImdb}
                 disabled={isSaving || !imdbUrl.trim()}
@@ -144,7 +145,7 @@ export default function Dashboard() {
               >
                 {isSaving ? "Connecting..." : "Connect IMDb"}
               </button>
-              
+
               <p className="text-xs text-muted">
                 Enter your IMDb profile URL to verify your professional status and enable bidding on projects.
               </p>
@@ -152,12 +153,14 @@ export default function Dashboard() {
           )}
         </section>
 
-        {/* My Projects */}
+        {/* My Pitches */}
         <section className="glass-panel p-6 md:col-span-2">
-          <h2 className="text-h3 mb-6">My Projects</h2>
+          <h2 className="text-h3 mb-6">My Pitches</h2>
           <div className="text-center py-12 border border-dashed border-white/10 rounded-lg">
-            <p className="text-muted mb-4">You haven't submitted any projects yet.</p>
-            <button className="btn btn-primary">Start a Project</button>
+            <p className="text-muted mb-4">You haven't created any pitches yet.</p>
+            <Link href="/create-pitch" className="btn btn-primary">
+              Create Pitch
+            </Link>
           </div>
         </section>
 
