@@ -13,11 +13,7 @@ export default function FundButton({ projectId, className = "" }: FundButtonProp
   const { isAuthenticated, loading } = useSupabaseAuth();
 
   const handleFundClick = () => {
-    if (isAuthenticated) {
-      router.push(`/fund/${projectId}`);
-    } else {
-      router.push(`/auth/signin?redirect=/fund/${projectId}`);
-    }
+    router.push(`/pitches/${projectId}`);
   };
 
   if (loading) {
