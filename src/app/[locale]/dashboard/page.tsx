@@ -4,6 +4,7 @@ import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AuthService } from "@/services/auth.service";
 
 export default function Dashboard() {
   const { isAuthenticated, user, profile, loading, updateProfile } = useSupabaseAuth();
@@ -11,6 +12,15 @@ export default function Dashboard() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const [displayName, setDisplayName] = useState(profile?.display_name || "");
+  const [fullName, setFullName] = useState(profile?.full_name || "");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileError, setProfileError] = useState("");
+  const [profileSuccess, setProfileSuccess] = useState("");
+  const [isProfileSaving, setIsProfileSaving] = useState(false);
 
   if (loading) {
     return (
@@ -67,6 +77,82 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdateNames = async () => {
+    setProfileError("");
+    setProfileSuccess("");
+    setIsProfileSaving(true);
+
+    try {
+      await updateProfile({
+        display_name: displayName.trim() || null,
+        full_name: fullName.trim() || null,
+      });
+      setProfileSuccess("Names updated successfully!");
+    } catch (err: any) {
+      setProfileError(err.message || "Failed to update names");
+    } finally {
+      setIsProfileSaving(false);
+    }
+  };
+
+  const handleUpdateEmail = async () => {
+    setProfileError("");
+    setProfileSuccess("");
+
+    if (!newEmail.trim()) {
+      setProfileError("Please enter a new email address");
+      return;
+    }
+
+    if (newEmail === user?.email) {
+      setProfileError("New email is the same as current email");
+      return;
+    }
+
+    setIsProfileSaving(true);
+    try {
+      await AuthService.updateEmail(newEmail);
+      setProfileSuccess("Email update initiated! Please check your new email for confirmation.");
+      setNewEmail("");
+    } catch (err: any) {
+      setProfileError(err.message || "Failed to update email");
+    } finally {
+      setIsProfileSaving(false);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    setProfileError("");
+    setProfileSuccess("");
+
+    if (!newPassword || !confirmPassword) {
+      setProfileError("Please enter and confirm your new password");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setProfileError("Passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setProfileError("Password must be at least 6 characters long");
+      return;
+    }
+
+    setIsProfileSaving(true);
+    try {
+      await AuthService.updatePassword(newPassword);
+      setProfileSuccess("Password updated successfully!");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      setProfileError(err.message || "Failed to update password");
+    } finally {
+      setIsProfileSaving(false);
+    }
+  };
+
   return (
     <div className="container py-12">
       <div className="flex items-center justify-between mb-12">
@@ -83,6 +169,122 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Profile Settings */}
+        <section className="glass-panel p-6 md:col-span-2">
+          <h2 className="text-h3 mb-6">Profile Settings</h2>
+
+          {profileError && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-lg mb-4">
+              {profileError}
+            </div>
+          )}
+
+          {profileSuccess && (
+            <div className="bg-green-500/10 border border-green-500/20 text-green-500 px-4 py-3 rounded-lg mb-4">
+              {profileSuccess}
+            </div>
+          )}
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">Display Name</label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Enter your display name"
+                className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-muted mt-1">This is the name shown to other users</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Full Name</label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Enter your full name"
+                className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-muted mt-1">Your legal name for professional purposes</p>
+            </div>
+
+            <button
+              onClick={handleUpdateNames}
+              disabled={isProfileSaving}
+              className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProfileSaving ? "Saving..." : "Update Names"}
+            </button>
+          </div>
+
+          <div className="border-t border-white/10 my-8"></div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">Current Email</label>
+              <div className="px-4 py-3 bg-surface/50 border border-white/5 rounded-lg text-muted">
+                {user?.email}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">New Email</label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="Enter new email address"
+                className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+              />
+              <p className="text-xs text-muted mt-1">You will need to verify your new email</p>
+            </div>
+
+            <button
+              onClick={handleUpdateEmail}
+              disabled={isProfileSaving || !newEmail.trim()}
+              className="btn btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProfileSaving ? "Updating..." : "Update Email"}
+            </button>
+          </div>
+
+          <div className="border-t border-white/10 my-8"></div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">New Password</label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Confirm Password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <button
+              onClick={handleUpdatePassword}
+              disabled={isProfileSaving || !newPassword || !confirmPassword}
+              className="btn btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProfileSaving ? "Updating..." : "Update Password"}
+            </button>
+          </div>
+        </section>
+
         {/* IMDb Integration */}
         <section className="glass-panel p-6">
           <h2 className="text-h3 mb-6">IMDb Integration</h2>
@@ -154,7 +356,7 @@ export default function Dashboard() {
         </section>
 
         {/* My Pitches */}
-        <section className="glass-panel p-6 md:col-span-2">
+        <section className="glass-panel p-6 md:col-span-3">
           <h2 className="text-h3 mb-6">My Pitches</h2>
           <div className="text-center py-12 border border-dashed border-white/10 rounded-lg">
             <p className="text-muted mb-4">You haven't created any pitches yet.</p>

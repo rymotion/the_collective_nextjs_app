@@ -88,6 +88,19 @@ export class AuthService {
     }
   }
 
+  static async updateEmail(newEmail: string) {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        email: newEmail,
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating email:', error);
+      throw error;
+    }
+  }
+
   static async getCurrentUser() {
     try {
       const { data: { user }, error } = await supabase.auth.getUser();

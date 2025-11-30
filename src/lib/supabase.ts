@@ -18,6 +18,7 @@ export type Database = {
           id: string;
           email: string;
           display_name: string | null;
+          full_name: string | null;
           avatar_url: string | null;
           bio: string | null;
           imdb_profile_url: string | null;
@@ -29,6 +30,7 @@ export type Database = {
           id: string;
           email: string;
           display_name?: string | null;
+          full_name?: string | null;
           avatar_url?: string | null;
           bio?: string | null;
           imdb_profile_url?: string | null;
@@ -36,6 +38,7 @@ export type Database = {
         };
         Update: {
           display_name?: string | null;
+          full_name?: string | null;
           avatar_url?: string | null;
           bio?: string | null;
           imdb_profile_url?: string | null;
