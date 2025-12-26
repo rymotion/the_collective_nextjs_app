@@ -1,28 +1,24 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 interface HeroProps {
   title: ReactNode;
   subtitle?: ReactNode;
   action?: ReactNode;
-  align?: 'left' | 'center';
+  align?: "left" | "center";
 }
 
-export function Hero({ title, subtitle, action, align = 'center' }: HeroProps) {
-  const alignClass =
-    align === 'center'
-      ? 'text-center mx-auto max-w-4xl'
-      : 'text-left max-w-3xl';
+export function Hero({ title, subtitle, action, align = "center" }: HeroProps) {
+  const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
+  const maxWidth = align === "center" ? "64rem" : "48rem";
+  const actionAlignClass =
+    align === "center" ? "justify-center" : "justify-start";
 
   return (
-    <div className={alignClass}>
-      <h1 className="text-6xl sm:text-7xl font-bold tracking-tighter leading-tight mb-6">
-        {title}
-      </h1>
-      {subtitle && (
-        <p className="text-xl sm:text-2xl text-muted mb-8">{subtitle}</p>
-      )}
+    <div className={alignClass} style={{ maxWidth }}>
+      <h1 className="text-display mb-6">{title}</h1>
+      {subtitle && <p className="text-subtitle mb-8">{subtitle}</p>}
       {action && (
-        <div className="flex gap-4 justify-center sm:justify-start">
+        <div className={`flex flex-wrap gap-4 ${actionAlignClass}`}>
           {action}
         </div>
       )}

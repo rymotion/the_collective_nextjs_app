@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 import { ProjectsService } from "@/services/projects.service";
 
@@ -37,7 +37,7 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
 
   useEffect(() => {
     if (!loading && !isAuthenticated && params) {
-      router.push(`/${params.locale}/auth/signin?redirect=/fund/${params.id}`);
+      router.push(`/auth/signin?redirect=/fund/${params.id}`);
     }
   }, [isAuthenticated, loading, router, params]);
 
@@ -64,12 +64,12 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
             console.warn(
               "[FundProjectPage] Project not found, redirecting to home"
             );
-            router.push(`/${params.locale}`);
+            router.push(`/`);
           }
         })
         .catch((error) => {
           console.error("[FundProjectPage] Error fetching project:", error);
-          router.push(`/${params.locale}`);
+          router.push(`/`);
         });
     }
   }, [params, router]);
@@ -94,7 +94,7 @@ export default function FundProjectPage({ params: paramsPromise }: PageProps) {
       );
 
       if (params) {
-        router.push(`/${params.locale}/projects/${params.id}`);
+        router.push(`/projects/${params.id}`);
       }
     } catch (error) {
       console.error("Error submitting contribution:", error);

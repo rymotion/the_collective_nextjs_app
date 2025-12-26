@@ -1,13 +1,13 @@
 "use client";
 
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { AuthService } from "@/services/auth.service";
+import { useEffect, useState } from "react";
+import { Link, useRouter } from "@/i18n/routing";
 
 export default function Dashboard() {
-  const { isAuthenticated, user, profile, loading, updateProfile } = useSupabaseAuth();
+  const { isAuthenticated, user, profile, loading, updateProfile } =
+    useSupabaseAuth();
   const [imdbUrl, setImdbUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -21,6 +21,11 @@ export default function Dashboard() {
   const [profileError, setProfileError] = useState("");
   const [profileSuccess, setProfileSuccess] = useState("");
   const [isProfileSaving, setIsProfileSaving] = useState(false);
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.push(`/auth/signin?redirect=${encodeURIComponent("/dashboard")}`);
+    }
+  }, [isAuthenticated, loading, router]);
 
   if (loading) {
     return (
@@ -31,7 +36,6 @@ export default function Dashboard() {
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/signin');
     return null;
   }
 
@@ -44,8 +48,10 @@ export default function Dashboard() {
     }
 
     // Basic validation for IMDb URL
-    if (!imdbUrl.includes('imdb.com/name/')) {
-      setError("Please enter a valid IMDb profile URL (e.g., https://www.imdb.com/name/nm0000123/)");
+    if (!imdbUrl.includes("imdb.com/name/")) {
+      setError(
+        "Please enter a valid IMDb profile URL (e.g., https://www.imdb.com/name/nm0000123/)"
+      );
       return;
     }
 
@@ -112,7 +118,9 @@ export default function Dashboard() {
     setIsProfileSaving(true);
     try {
       await AuthService.updateEmail(newEmail);
-      setProfileSuccess("Email update initiated! Please check your new email for confirmation.");
+      setProfileSuccess(
+        "Email update initiated! Please check your new email for confirmation."
+      );
       setNewEmail("");
     } catch (err: any) {
       setProfileError(err.message || "Failed to update email");
@@ -159,7 +167,9 @@ export default function Dashboard() {
         <h1 className="text-display">Dashboard</h1>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <div className="font-bold text-lg">{profile?.display_name || user?.email}</div>
+            <div className="font-bold text-lg">
+              {profile?.display_name || user?.email}
+            </div>
             <div className="text-sm text-muted">{user?.email}</div>
           </div>
           <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
@@ -187,7 +197,9 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Display Name</label>
+              <label className="block text-sm font-medium mb-2">
+                Display Name
+              </label>
               <input
                 type="text"
                 value={displayName}
@@ -195,11 +207,15 @@ export default function Dashboard() {
                 placeholder="Enter your display name"
                 className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
               />
-              <p className="text-xs text-muted mt-1">This is the name shown to other users</p>
+              <p className="text-xs text-muted mt-1">
+                This is the name shown to other users
+              </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Full Name</label>
+              <label className="block text-sm font-medium mb-2">
+                Full Name
+              </label>
               <input
                 type="text"
                 value={fullName}
@@ -207,7 +223,9 @@ export default function Dashboard() {
                 placeholder="Enter your full name"
                 className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
               />
-              <p className="text-xs text-muted mt-1">Your legal name for professional purposes</p>
+              <p className="text-xs text-muted mt-1">
+                Your legal name for professional purposes
+              </p>
             </div>
 
             <button
@@ -223,14 +241,18 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Current Email</label>
+              <label className="block text-sm font-medium mb-2">
+                Current Email
+              </label>
               <div className="px-4 py-3 bg-surface/50 border border-white/5 rounded-lg text-muted">
                 {user?.email}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">New Email</label>
+              <label className="block text-sm font-medium mb-2">
+                New Email
+              </label>
               <input
                 type="email"
                 value={newEmail}
@@ -238,7 +260,9 @@ export default function Dashboard() {
                 placeholder="Enter new email address"
                 className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary transition-colors"
               />
-              <p className="text-xs text-muted mt-1">You will need to verify your new email</p>
+              <p className="text-xs text-muted mt-1">
+                You will need to verify your new email
+              </p>
             </div>
 
             <button
@@ -254,7 +278,9 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">New Password</label>
+              <label className="block text-sm font-medium mb-2">
+                New Password
+              </label>
               <input
                 type="password"
                 value={newPassword}
@@ -265,7 +291,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium mb-2">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 value={confirmPassword}
@@ -316,7 +344,9 @@ export default function Dashboard() {
                   <span className="text-2xl">🎬</span>
                   <div>
                     <div className="font-bold">Not Connected</div>
-                    <div className="text-xs text-muted">Sync your IMDb profile to bid on projects</div>
+                    <div className="text-xs text-muted">
+                      Sync your IMDb profile to bid on projects
+                    </div>
                   </div>
                 </div>
               </div>
@@ -349,7 +379,8 @@ export default function Dashboard() {
               </button>
 
               <p className="text-xs text-muted">
-                Enter your IMDb profile URL to verify your professional status and enable bidding on projects.
+                Enter your IMDb profile URL to verify your professional status
+                and enable bidding on projects.
               </p>
             </div>
           )}
@@ -359,7 +390,9 @@ export default function Dashboard() {
         <section className="glass-panel p-6 md:col-span-3">
           <h2 className="text-h3 mb-6">My Pitches</h2>
           <div className="text-center py-12 border border-dashed border-white/10 rounded-lg">
-            <p className="text-muted mb-4">You haven't created any pitches yet.</p>
+            <p className="text-muted mb-4">
+              You haven't created any pitches yet.
+            </p>
             <Link href="/create-pitch" className="btn btn-primary">
               Create Pitch
             </Link>

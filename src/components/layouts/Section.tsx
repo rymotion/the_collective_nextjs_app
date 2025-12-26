@@ -1,28 +1,39 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 interface SectionProps {
   children: ReactNode;
-  spacing?: 'sm' | 'md' | 'lg' | 'xl';
-  background?: 'default' | 'surface' | 'transparent';
+  spacing?: "sm" | "md" | "lg" | "xl";
+  background?: "default" | "surface" | "transparent";
 }
 
 export function Section({
   children,
-  spacing = 'lg',
-  background = 'transparent',
+  spacing = "lg",
+  background = "transparent",
 }: SectionProps) {
-  const spacingClass = {
-    sm: 'py-8',
-    md: 'py-12',
-    lg: 'py-16',
-    xl: 'py-24',
+  const padding = {
+    sm: "var(--spacing-6)",
+    md: "var(--spacing-8)",
+    lg: "var(--spacing-10)",
+    xl: "var(--spacing-12)",
   }[spacing];
 
-  const bgClass = {
-    default: 'bg-background',
-    surface: 'bg-surface',
-    transparent: '',
-  }[background];
+  const backgroundColor =
+    background === "default"
+      ? "var(--background)"
+      : background === "surface"
+      ? "var(--surface)"
+      : "transparent";
 
-  return <section className={`${spacingClass} ${bgClass}`}>{children}</section>;
+  return (
+    <section
+      style={{
+        paddingTop: padding,
+        paddingBottom: padding,
+        background: backgroundColor,
+      }}
+    >
+      {children}
+    </section>
+  );
 }

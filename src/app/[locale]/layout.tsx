@@ -34,9 +34,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <Navigation />
-            <main className="pt-[var(--nav-height)] min-h-screen flex flex-col">
-              {children}
-            </main>
+            <main className="min-h-screen flex flex-col">{children}</main>
             <Footer />
             <OfflineIndicator />
           </Providers>

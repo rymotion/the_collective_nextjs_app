@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useSupabaseAuth } from "@/context/SupabaseAuthContext";
 
 interface FundButtonProps {
@@ -8,7 +8,10 @@ interface FundButtonProps {
   className?: string;
 }
 
-export default function FundButton({ projectId, className = "" }: FundButtonProps) {
+export default function FundButton({
+  projectId,
+  className = "",
+}: FundButtonProps) {
   const router = useRouter();
   const { isAuthenticated, loading } = useSupabaseAuth();
 
