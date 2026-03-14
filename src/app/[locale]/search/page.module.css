@@ -1,11 +1,24 @@
 .emptyState {
-  @apply text-center py-20;
+  text-align: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 .emptyStateIcon {
-  @apply w-20 h-20 mx-auto mb-6 text-muted opacity-50;
+  width: 5rem;
+  height: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+  color: var(--foreground-muted);
+  opacity: 0.5;
 }
 
 .emptyStateText {
-  @apply text-body text-muted max-w-md mx-auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--foreground-muted);
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
 }

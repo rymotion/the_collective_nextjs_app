@@ -20,7 +20,7 @@ export default function TextArea({
   label,
   value,
   onChange,
-  placeholder,
+  placeholder = '',
   error,
   disabled = false,
   required = false,
@@ -32,11 +32,10 @@ export default function TextArea({
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const id = useId();
-  
+
   const hasValue = value.length > 0;
   const isFloating = isFocused || hasValue;
 
-  // Auto-resize functionality
   useEffect(() => {
     if (autoResize && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -45,9 +44,8 @@ export default function TextArea({
   }, [value, autoResize]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`w-full ${className}`}>
       <div className="relative">
-        {/* TextArea */}
         <textarea
           ref={textareaRef}
           id={id}
@@ -61,36 +59,34 @@ export default function TextArea({
           rows={rows}
           placeholder={isFloating ? placeholder : ''}
           className={`
-            peer w-full px-4 py-4 pt-6 bg-surface/50 backdrop-blur-sm
-            border-2 rounded-xl text-foreground
+            peer w-full min-h-[120px] px-4 pt-7 pb-3
+            bg-glass backdrop-blur-sm
+            border-2 rounded-lg text-foreground
             transition-all duration-200 ease-out
             focus:outline-none
             disabled:opacity-50 disabled:cursor-not-allowed
             ${autoResize ? 'resize-none' : 'resize-y'}
-            ${error 
-              ? 'border-red-500/50 focus:border-red-500 focus:ring-4 focus:ring-red-500/20' 
-              : 'border-white/10 focus:border-primary focus:ring-4 focus:ring-primary/20'
+            ${error
+              ? 'border-red-500/50 focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]'
+              : 'border-glass-border focus:border-primary focus:shadow-[0_0_0_3px_rgba(229,9,20,0.1)]'
             }
             ${disabled ? 'bg-surface/30' : 'hover:border-white/20'}
           `}
+          style={{ fontSize: '1rem', lineHeight: '1.5' }}
         />
 
-        {/* Floating Label */}
         <label
           htmlFor={id}
           className={`
-            absolute left-4 pointer-events-none
+            absolute left-4 top-4
+            pointer-events-none origin-left
             transition-all duration-200 ease-out
-            ${isFloating 
-              ? 'top-2 text-xs font-medium' 
-              : 'top-4 text-base'
+            ${isFloating
+              ? 'text-xs -translate-y-2 text-foreground-muted'
+              : 'text-base text-foreground-muted'
             }
-            ${error 
-              ? 'text-red-500' 
-              : isFocused 
-                ? 'text-primary' 
-                : 'text-muted'
-            }
+            ${isFocused && !error ? 'text-primary' : ''}
+            ${error ? 'text-red-500' : ''}
           `}
         >
           {label}
@@ -98,18 +94,28 @@ export default function TextArea({
         </label>
       </div>
 
-      {/* Error Message or Character Counter */}
-      <div className="flex justify-between items-center mt-2 min-h-[20px]">
+      <div className="flex justify-between items-start mt-2 min-h-[20px]">
         {error && (
-          <p className="text-xs text-red-500 flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <p className="text-xs text-red-500 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
             </svg>
             {error}
           </p>
         )}
         {!error && maxLength && (
-          <p className={`text-xs ml-auto ${value.length > maxLength * 0.9 ? 'text-yellow-500' : 'text-muted'}`}>
+          <p
+            className={`
+              text-xs ml-auto tabular-nums
+              transition-colors duration-200
+              ${value.length > maxLength * 0.9
+                ? value.length === maxLength
+                  ? 'text-red-500 font-medium'
+                  : 'text-yellow-500'
+                : 'text-foreground-muted'
+              }
+            `}
+          >
             {value.length}/{maxLength}
           </p>
         )}
