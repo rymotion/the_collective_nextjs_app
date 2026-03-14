@@ -21,46 +21,65 @@ export default function EmptyProjectsState({ locale }: EmptyProjectsStateProps) 
 
   return (
     <div className="container py-20">
-      <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center">
+        <div className="mb-12 animate-fade-in">
+          <div className="inline-block mb-6 p-4 bg-glass backdrop-blur-sm border border-glass-border rounded-full">
+            <svg
+              className="w-16 h-16 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+              />
+            </svg>
+          </div>
 
-        <h2 className="text-h1 mb-6">No Projects Yet</h2>
+          <h2 className="text-display mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            No Projects Yet
+          </h2>
 
-        <p className="text-subtitle mb-8 leading-relaxed">
-          Be the first to bring your cinematic vision to life. Share your screenplay
-          and connect with a community ready to support independent filmmakers.
-        </p>
+          <p className="text-subtitle mb-10 leading-relaxed max-w-2xl mx-auto">
+            Be the first to bring your cinematic vision to life. Share your screenplay
+            and connect with a community ready to support independent filmmakers.
+          </p>
 
-        <button
-          onClick={handleCreatePitch}
-          className="btn btn-primary text-lg px-8 py-4 shadow-xl hover:shadow-2xl"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-6 h-6 mr-2 inline-block"
+          <button
+            onClick={handleCreatePitch}
+            className="btn btn-primary text-lg px-10 py-5 shadow-2xl hover:shadow-primary/50 transform hover:scale-105 transition-all duration-300 group"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Pitch Your Screenplay
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="w-6 h-6 mr-3 inline-block group-hover:rotate-90 transition-transform duration-300"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Pitch Your Screenplay
+          </button>
+        </div>
 
-        <div className="mt-12 grid grid-cols-1 md-grid-cols-3 gap-6 text-left">
-          <div className="glass-panel p-6">
-            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+        <div className="mt-16 grid grid-cols-1 md-grid-cols-3 gap-6 text-left">
+          <div className="glass-panel p-8 hover:border-primary/50 transition-all duration-300 group animate-slide-up">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6 text-primary"
+                className="w-8 h-8 text-primary"
               >
                 <path
                   strokeLinecap="round"
@@ -69,22 +88,24 @@ export default function EmptyProjectsState({ locale }: EmptyProjectsStateProps) 
                 />
               </svg>
             </div>
-            <h3 className="text-h3 mb-2">Share Your Story</h3>
-            <p className="text-caption">
+            <h3 className="text-h3 mb-3 group-hover:text-primary transition-colors">
+              Share Your Story
+            </h3>
+            <p className="text-caption leading-relaxed">
               Present your screenplay with a compelling pitch that captures the
               essence of your vision
             </p>
           </div>
 
-          <div className="glass-panel p-6">
-            <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+          <div className="glass-panel p-8 hover:border-secondary/50 transition-all duration-300 group animate-slide-up" style={{ animationDelay: '100ms' }}>
+            <div className="w-16 h-16 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6 text-secondary"
+                className="w-8 h-8 text-secondary"
               >
                 <path
                   strokeLinecap="round"
@@ -93,21 +114,23 @@ export default function EmptyProjectsState({ locale }: EmptyProjectsStateProps) 
                 />
               </svg>
             </div>
-            <h3 className="text-h3 mb-2">Build Your Team</h3>
-            <p className="text-caption">
+            <h3 className="text-h3 mb-3 group-hover:text-secondary transition-colors">
+              Build Your Team
+            </h3>
+            <p className="text-caption leading-relaxed">
               Invite crew members and collaborators to join your project directly
             </p>
           </div>
 
-          <div className="glass-panel p-6">
-            <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mb-4">
+          <div className="glass-panel p-8 hover:border-accent/50 transition-all duration-300 group animate-slide-up" style={{ animationDelay: '200ms' }}>
+            <div className="w-16 h-16 bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6 text-accent"
+                className="w-8 h-8 text-accent"
               >
                 <path
                   strokeLinecap="round"
@@ -116,8 +139,10 @@ export default function EmptyProjectsState({ locale }: EmptyProjectsStateProps) 
                 />
               </svg>
             </div>
-            <h3 className="text-h3 mb-2">Get Funded</h3>
-            <p className="text-caption">
+            <h3 className="text-h3 mb-3 group-hover:text-accent transition-colors">
+              Get Funded
+            </h3>
+            <p className="text-caption leading-relaxed">
               Set your funding goal and duration to bring your film to life
             </p>
           </div>

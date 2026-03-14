@@ -34,15 +34,20 @@
   --foreground-muted-rgb: 161 161 161;
 
   /* Spacing System (8px base) */
+  --spacing-0: 0;
   --spacing-1: 0.5rem; /* 8px */
   --spacing-2: 1rem; /* 16px */
   --spacing-3: 1.5rem; /* 24px */
   --spacing-4: 2rem; /* 32px */
   --spacing-5: 2.5rem; /* 40px */
   --spacing-6: 3rem; /* 48px */
+  --spacing-7: 3.5rem; /* 56px */
   --spacing-8: 4rem; /* 64px */
+  --spacing-9: 4.5rem; /* 72px */
   --spacing-10: 5rem; /* 80px */
+  --spacing-11: 5.5rem; /* 88px */
   --spacing-12: 6rem; /* 96px */
+  --spacing-14: 7rem; /* 112px */
   --spacing-16: 8rem; /* 128px */
 
   /* Layout */

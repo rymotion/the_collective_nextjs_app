@@ -1,27 +1,90 @@
 .genreButton {
-  @apply px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  transition: all 0.2s ease;
+  transform: scale(1);
+}
+
+.genreButton:hover {
+  transform: scale(1.05);
 }
 
 .activeGenreButton {
-  @apply bg-primary text-white shadow-xl shadow-primary/40 scale-105;
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 25px 50px -12px rgba(229, 9, 20, 0.4);
+  transform: scale(1.05);
 }
 
 .inactiveGenreButton {
-  @apply bg-surface text-foreground border-2 border-white/10 hover:border-primary hover:bg-white/5;
+  background: var(--surface);
+  color: var(--foreground);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.inactiveGenreButton:hover {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .emptyState {
-  @apply text-center py-20;
+  text-align: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 .emptyStateIcon {
-  @apply w-20 h-20 mx-auto mb-6 text-muted opacity-50;
+  width: 5rem;
+  height: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+  color: var(--foreground-muted);
+  opacity: 0.5;
 }
 
 .pitchButton {
-  @apply btn btn-primary text-lg px-8 py-4 inline-flex items-center gap-2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 1.125rem;
+  background: var(--primary);
+  color: white;
+}
+
+.pitchButton:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .browseButton {
-  @apply btn btn-outline text-lg px-8 py-4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.125rem;
+  background: transparent;
+  border: 1px solid var(--foreground);
+  color: var(--foreground);
+}
+
+.browseButton:hover {
+  background: var(--foreground);
+  color: var(--background);
 }
