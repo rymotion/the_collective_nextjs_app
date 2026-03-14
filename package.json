@@ -3,13 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "APP_ENV=dev next dev",
+    "dev:empty": "APP_ENV=dev MOCK_DATA_STATE=empty next dev",
+    "dev:populated": "APP_ENV=dev MOCK_DATA_STATE=populated next dev",
+    "dev:pitch": "APP_ENV=dev MOCK_DATA_STATE=pitch-focused next dev",
+    
+    "qa": "APP_ENV=qa next dev",
+    "qa:empty": "APP_ENV=qa MOCK_DATA_STATE=empty next dev",
+    "qa:populated": "APP_ENV=qa MOCK_DATA_STATE=populated next dev",
+    "qa:pitch": "APP_ENV=qa MOCK_DATA_STATE=pitch-focused next dev",
+    
     "build": "TURBOPACK=0 next build",
-    "start": "next start",
-    "lint": "eslint",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch",
-    "test:ci": "jest --ci --coverage --maxWorkers=2"
+    "start": "APP_ENV=prod next start",
+    "start:prod": "APP_ENV=prod next start"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
