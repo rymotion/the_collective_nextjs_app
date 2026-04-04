@@ -71,7 +71,7 @@ export default function Input({
             bg-glass backdrop-blur-sm
             border-2 rounded-lg text-foreground
             transition-all duration-200 ease-out
-            focus:outline-none
+            focus:outline-none focus:text-black selection:text-black
             disabled:opacity-50 disabled:cursor-not-allowed
             ${icon ? 'pl-12' : ''}
             ${type === 'password' ? 'pr-12' : ''}
